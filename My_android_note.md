@@ -1,4 +1,4 @@
-This is my Android notes.
+This is my Android notes :)
 =========================
 
 note1:
