@@ -361,8 +361,8 @@ node6: 關於在androidView物件上顯示數字之注意事項:
 
 node7: 將view畫面以Camera取代
 -----------------------------
-範例Code:
-
+範例Code:(class1)
+	
     package com.example.user.initial_ar12;
 
     import android.content.Context;
@@ -524,6 +524,8 @@ node7: 將view畫面以Camera取代
     		}
     	}
     }
+    
+範例Code:(class2)
 
     public class Compatibility {
       	private static Method mParameters_getSupportedPreviewSizes;
