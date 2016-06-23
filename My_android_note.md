@@ -627,4 +627,15 @@ node8:AppCompatActivity與FragmentActivity問題
     	}
     	
 像這種AppCompatActivity有支援ActionBar的才行。
+
+node9:Error inflating class android.support.design.widget.NavigationView問題
+----------------------------------------------------------------------------
+
+此問題通常發生在使用DrawerBar等特殊主題套件，解法:
 	
+	Actually it is not the matter of the primarycolortext, upgrading or downgrading the dependencies.This problem will likely occur when the version of your appcompat library and design support library doesn't match.
+	Example of matching condition
+		compile 'com.android.support:appcompat-v7:23.1.1' // appcompat library
+		compile 'com.android.support:design:23.1.1' //design support library
+
+意思是指請更新library :)
