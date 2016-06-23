@@ -597,4 +597,34 @@ node7: 將view畫面以Camera取代
       	}
 
     }
+node8:AppCompatActivity與FragmentActivity問題
+---------------------------------------------
 
+若遇到以下狀況:
+
+	Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar); //not found
+        ActionBar actionBar = getSupportActionBar(); //not found
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        
+代表你預設用的主題是沒有支援ActionBar的，所以要將main extend改掉:
+
+	public class MainActivity extends FragmentActivity {
+	    @Override
+	    protected void onCreate(Bundle savedInstanceState) {
+	        super.onCreate(savedInstanceState);
+	
+	    }
+    	}
+改成:
+
+	public class MainActivity extends AppCompatActivity {
+	    @Override
+	    protected void onCreate(Bundle savedInstanceState) {
+	        super.onCreate(savedInstanceState);
+	    }
+    	}
+    	
+像這種AppCompatActivity有支援ActionBar的才行。
+	
