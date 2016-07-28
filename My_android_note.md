@@ -644,7 +644,11 @@ node10:map fragment 之意外:android.view.InflateException: Binary XML file lin
 ------------------------------------------------------------------------------
 
 自從Android改版後，所有使用到Map的程式皆要在AndroidManifest.xml中的<application>加入:
+
 		<meta-data android:name="com.google.android.geo.API_KEY" android:value="your Key"/>
+		
 不再只需要:
+
 		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="your Key"/>
+		
 若不加會一直出錯。
