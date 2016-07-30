@@ -16,7 +16,7 @@ Auther: Chao Wei-Chu
         $(item).attr("id","wow"+i);
         $("#category").append('<a class="new'+tag+'" href="#wow'+i+'">'+$(this).text()+'</a></br>');
         $(".newh2").css("margin-left",0);
-        $(".newh3").css("margin-left",100);
+        $(".newh3").css("margin-left",300);
         $(".newh4").css("margin-left",40);
         $(".newh5").css("margin-left",60);
         $(".newh6").css("margin-left",80);
@@ -24,18 +24,18 @@ Auther: Chao Wei-Chu
  });
 </script>
 <div id="category">
-	<h3>Note1:Android最基本之問題就是沒加權限(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#note1)</h3>
-	<h3>Note2:Toast功能之常遇問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#note2)</h3>
-	<h3>Node3:新map物件與引入mapframe寫法不同問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node3新map物件與引入mapframe寫法不同問題)</h3>
-	<h3>Node4:使用Intent創造new Activity時要在AndroidManifest.xml加入設定(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node4-使用intent創造new-activity時要在androidmanifestxml加入設定)</h3>
-	<h3>Node5:GPS的三種寫法(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node5-gps的三種寫法)</h3>
-	<h3>Node6:關於在androidView物件上顯示數字之注意事項(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node6-關於在androidview物件上顯示數字之注意事項)</h3>
-	<h3>Node7:將view畫面以Camera取代(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node7-將view畫面以camera取代)</h3>
-	<h3>Node8:AppCompatActivity與FragmentActivity問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node8appcompatactivity與fragmentactivity問題)</h3>
-	<h3>Node9:Error inflating class android.support.design.widget.NavigationView問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node9error-inflating-class-androidsupportdesignwidgetnavigationview問題)</h3>
-	<h3>Node10:map fragment 之意外:android.view.InflateException: Binary XML file line(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node10map-fragment-之意外androidviewinflateexception-binary-xml-file-line)</h3>
-	<h3>Node11:在GoogleMap上的mark加上自訂格式樣式的注意事項(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node11在googlemap上的mark加上自訂格式樣式的注意事項)</h3>
-	<h3>Node12:使用Android POST and GET Request using HttpURLConnection(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node12使用android-post-and-get-request-using-httpurlconnection-)</h3>
+	<h5>Note1:Android最基本之問題就是沒加權限(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#note1)</h5>
+	<h5>Note2:Toast功能之常遇問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#note2)</h5>
+	<h5>Note3:新map物件與引入mapframe寫法不同問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node3新map物件與引入mapframe寫法不同問題)</h5>
+	<h5>Note4:使用Intent創造new Activity時要在AndroidManifest.xml加入設定(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node4-使用intent創造new-activity時要在androidmanifestxml加入設定)</h5>
+	<h5>Note5:GPS的三種寫法(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node5-gps的三種寫法)</h5>
+	<h5>Note6:關於在androidView物件上顯示數字之注意事項(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node6-關於在androidview物件上顯示數字之注意事項)</h5>
+	<h5>Note7:將view畫面以Camera取代(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node7-將view畫面以camera取代)</h5>
+	<h5>Note8:AppCompatActivity與FragmentActivity問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node8appcompatactivity與fragmentactivity問題)</h5>
+	<h5>Note9:Error inflating class android.support.design.widget.NavigationView問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node9error-inflating-class-androidsupportdesignwidgetnavigationview問題)</h5>
+	<h5>Note10:map fragment 之意外:android.view.InflateException: Binary XML file line(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node10map-fragment-之意外androidviewinflateexception-binary-xml-file-line)</h5>
+	<h5>Note11:在GoogleMap上的mark加上自訂格式樣式的注意事項(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node11在googlemap上的mark加上自訂格式樣式的注意事項)</h5>
+	<h5>Note12:使用Android POST and GET Request using HttpURLConnection(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node12使用android-post-and-get-request-using-httpurlconnection-)</h5>
 	
 </div>
 
