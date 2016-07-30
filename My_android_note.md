@@ -693,4 +693,70 @@ code如下:
 	
 	((TextView)findViewById(R.id.user_title))
 	
+node12:使用Android POST and GET Request using HttpURLConnection 
+---------------------------------------------------------------
+相信大家都很想知道Android是如何跟後台資料庫、server溝通、交換資料的?
+通常大家在網路上查到的方法都是使用apache的HttpClient實作，如下:
+
+	import org.apache.http.HttpResponse;
+	import org.apache.http.NameValuePair;
+	import org.apache.http.client.ClientProtocolException;
+	import org.apache.http.client.entity.UrlEncodedFormEntity;
+	import org.apache.http.client.methods.HttpPost;
+	import org.apache.http.impl.client.DefaultHttpClient;
+	import org.apache.http.message.BasicNameValuePair;
+	import org.apache.http.protocol.HTTP;
+	import org.apache.http.util.EntityUtils;
+	
+	private String uriAPI = "http://192.168.1.3/httpPostTest.php";
+	
+	private String sendPostDataToInternet(String strTxt){/* 建立HTTP Post連線 */
+	        HttpPost httpRequest = new HttpPost(uriAPI);
+	        /*
+	         * Post運作傳送變數必須用NameValuePair[]陣列儲存
+	         */
+	        List<NameValuePair> params = new ArrayList<NameValuePair>();
+	        params.add(new BasicNameValuePair("data", strTxt));
+	
+	        try
+	        {
+	            /* 發出HTTP request */
+	            httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+	            /* 取得HTTP response */
+	            HttpResponse httpResponse = new DefaultHttpClient().execute(httpRequest);
+	            /* 若狀態碼為200 ok */
+	            if (httpResponse.getStatusLine().getStatusCode() == 200)
+	            {
+	                /* 取出回應字串 */
+	                String strResult = EntityUtils.toString(httpResponse.getEntity());
+	                // 回傳回應字串
+	                return strResult;
+	            }
+	        } catch (ClientProtocolException e){
+	            Toast.makeText(this, e.getMessage().toString(), Toast.LENGTH_SHORT).show();
+	            e.printStackTrace();
+	            
+	        } catch (IOException e){
+	            Toast.makeText(this, e.getMessage().toString(), Toast.LENGTH_SHORT).show();
+	            e.printStackTrace();
+	            
+	        } catch (Exception e){
+	            Toast.makeText(this, e.getMessage().toString(), Toast.LENGTH_SHORT).show();
+	            e.printStackTrace();
+	            
+	        }
+	        returnnull;
+	}
+
+看到這裡先別太興奮，必須告訴大家一個壞消息，就是從Android API 23之後，將不再支援(內建)apache的HttpClient函式庫(我寫這筆記時，API已經出到25...)，因為Google認為不合適，基本上具體說法如下:
+
+	Apache HTTP Client:
+	"DefaultHttpClient" and its sibling "AndroidHttpClient" are extensible HTTP clients suitable for web browsers. They have large and flexible APIs. Their implementation is stable and they have few bugs.
+	
+	But the large size of this API makes it difficult for us to improve it without breaking compatibility. The Android team is not actively working on Apache HTTP Client.
+
+	HttpURLConnection:
+	"HttpURLConnection" is a general-purpose, lightweight HTTP client suitable for most applications. This class has humble beginnings, but its focused API has made it easy for us to improve steadily.
+	
+	
 	
