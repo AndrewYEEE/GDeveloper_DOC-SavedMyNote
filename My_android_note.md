@@ -748,15 +748,26 @@ node12:使用Android POST and GET Request using HttpURLConnection
 	        returnnull;
 	}
 
-看到這裡先別太興奮，必須告訴大家一個壞消息，就是從Android API 23之後，將不再支援(內建)apache的HttpClient函式庫(我寫這筆記時，API已經出到25...)，因為Google認為不合適，基本上具體說法如下:
+看到這裡先別太興奮，必須告訴大家一個壞消息，就是從Android API 23之後，將不再支援(內建)apache的HttpClient函式庫(我寫這筆記時，API已經出到25...)，因為Google認為不合適，基本上具體說法如下([參考資料](http://android-developers.blogspot.nl/2011/09/androids-http-clients.html)):
 
-	Apache HTTP Client:
-	"DefaultHttpClient" and its sibling "AndroidHttpClient" are extensible HTTP clients suitable for web browsers. They have large and flexible APIs. Their implementation is stable and they have few bugs.
-	
-	But the large size of this API makes it difficult for us to improve it without breaking compatibility. The Android team is not actively working on Apache HTTP Client.
+	Apache HttpClient:
+	"DefaultHttpClient" and its sibling "AndroidHttpClient" are extensible HTTP clients suitable for web browsers. 
+	They have large and flexible APIs. Their implementation is stable and they have few bugs.But the large size of
+	this API makes it difficult for us to improve it without breaking compatibility. The Android team is not 
+	actively working on Apache HTTP Client.
 
 	HttpURLConnection:
-	"HttpURLConnection" is a general-purpose, lightweight HTTP client suitable for most applications. This class has humble beginnings, but its focused API has made it easy for us to improve steadily.
+	"HttpURLConnection" is a general-purpose, lightweight HTTP client suitable for most applications. This class 
+	has humble beginnings, but its focused API has made it easy for us to improve steadily.
+
+因此Google官方在API23之後，改成使用輕量的HttpURLConnection內建函式庫來實作，不但不需要引入其他 Library, 也沒有甚麼前置作業，可說是以種新的用法。(官方說法如下)([參考資料](https://developer.android.com/training/basics/network-ops/connecting.html))
+
+	Choose an HTTP Client
+	Most network-connected Android apps use HTTP to send and receive data. The Android platform includes the 
+	"HttpURLConnection" client, which supports HTTPS, streaming uploads and downloads, configurable timeouts,
+	IPv6, and connection pooling.
+	
+這裡就提供一個範例加上註解:
 	
 	
 	
