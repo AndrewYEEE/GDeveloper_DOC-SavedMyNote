@@ -16,7 +16,7 @@ Auther: Chao Wei-Chu
         $(item).attr("id","wow"+i);
         $("#category").append('<a class="new'+tag+'" href="#wow'+i+'">'+$(this).text()+'</a></br>');
         $(".newh2").css("margin-left",0);
-        $(".newh3").css("margin-left",60);
+        $(".newh3").css("margin-left",100);
         $(".newh4").css("margin-left",40);
         $(".newh5").css("margin-left",60);
         $(".newh6").css("margin-left",80);
