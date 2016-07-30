@@ -767,6 +767,14 @@ node12:使用Android POST and GET Request using HttpURLConnection
 	"HttpURLConnection" client, which supports HTTPS, streaming uploads and downloads, configurable timeouts,
 	IPv6, and connection pooling.
 	
+來看看實際API內部Android.jar檔比較:
+
+1.API23的內建函式庫
+![know](/AndroidHTTP1.jpg)
+2.API22的內建函式庫
+![know](/AndroidHTTP2.jpg)
+
+	
 這裡就提供一個範例:
 	
 	import java.io.BufferedReader;
