@@ -1,5 +1,7 @@
 This is my Android notes :)
 =========================
+Auther: Chao Wei-Chu
+--------------------
 
 note1:
 ------
