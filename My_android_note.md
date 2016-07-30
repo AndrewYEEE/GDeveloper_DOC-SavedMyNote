@@ -1,7 +1,6 @@
 This is my Android notes :)
 =========================
 Auther: Chao Wei-Chu
-####################
 
 <link rel="stylesheet" href="http://yandex.st/highlightjs/6.2/styles/googlecode.min.css">
  
