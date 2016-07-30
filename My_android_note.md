@@ -61,7 +61,7 @@ Android最常見之問題就是沒加權限，記得只要有使用Camera、Inte
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     
 
-<a name="node2">note2</a>:
+<div name="node2">note2:</div>
 ---------------------------------
 
 關於Toast這項功能之問題，通常這物件是用於在視窗以提示的方式顯示訊息，通常用法如下:
