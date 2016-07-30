@@ -1,7 +1,7 @@
 This is my Android notes :)
 =========================
 Auther: Chao Wei-Chu
---------------------
+####################
 
 <link rel="stylesheet" href="http://yandex.st/highlightjs/6.2/styles/googlecode.min.css">
  
@@ -24,6 +24,7 @@ Auther: Chao Wei-Chu
  });
 </script>
 <div id="category">
+	<h2>========目錄========<h2>
 	<h5>Note1:Android最基本之問題就是沒加權限(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#note1)</h5>
 	<h5>Note2:Toast功能之常遇問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#note2)</h5>
 	<h5>Note3:新map物件與引入mapframe寫法不同問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node3新map物件與引入mapframe寫法不同問題)</h5>
@@ -37,7 +38,9 @@ Auther: Chao Wei-Chu
 	<h5>Note11:在GoogleMap上的mark加上自訂格式樣式的注意事項(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node11在googlemap上的mark加上自訂格式樣式的注意事項)</h5>
 	<h5>Note12:使用Android POST and GET Request using HttpURLConnection(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node12使用android-post-and-get-request-using-httpurlconnection-)</h5>
 	
+	<h2>=============================</h2>	
 </div>
+
 
 note1:
 ------
