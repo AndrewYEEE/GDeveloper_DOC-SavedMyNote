@@ -773,7 +773,7 @@ node12:使用Android POST and GET Request using HttpURLConnection
 ![know](/AndroidHTTP1.jpg)
 2.API22的內建函式庫
 ![know](/AndroidHTTP2.jpg)
-
+很明顯的看出Google拿掉了apache原始的http函式庫，而改用HttpURLConnection。
 	
 這裡就提供一個範例:
 	
