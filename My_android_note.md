@@ -652,3 +652,40 @@ node10:map fragment 之意外:android.view.InflateException: Binary XML file lin
 		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="your Key"/>
 		
 若不加會一直出錯。
+
+node11:在GoogleMap上的mark加上自訂格式樣式的注意事項
+----------------------------------------------------
+
+code如下:
+
+	private class Myinfo implements GoogleMap.InfoWindowAdapter{
+	        private final View infoWindow=getLayoutInflater().inflate(R.layout.user_position,null);
+	        @Override
+	        public View getInfoWindow(Marker marker) {
+	            TextView user_title=((TextView)infoWindow.findViewById(R.id.user_title));
+	            TextView user_position = ((TextView)infoWindow.findViewById(R.id.user_text1));
+	            user_position.setText("coordinate: "+latLng.latitude+" "+latLng.longitude);
+	            user_title.setText("Position: "+marker.getTitle());
+	            return infoWindow;
+	        }
+	
+	        @Override
+	        public View getInfoContents(Marker marker) {
+	            return null;
+	        }
+	}
+	
+從code中可以看到TextView user_title=((TextView)infoWindow.findViewById(R.id.user_title))這行和一般的寫法不一樣，此處須注意以下幾點:
+
+1.貌似從Android6.0之後堅持一定要加上括號:
+
+	TextView user_title=((TextView)infoWindow.findViewById(R.id.user_title));
+	
+	不可寫成:
+	
+	TextView user_title=(TextView)infoWindow.findViewById(R.id.user_title);
+
+2.findViewById部分需加上所指定的layout檔設定，不然一定出錯:
+
+	((TextView)infoWindow.findViewById(R.id.user_title))
+	
