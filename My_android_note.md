@@ -23,7 +23,17 @@ Auther: Chao Wei-Chu
       });
  });
 </script>
-<div id="category"></div>
+<div id="category">
+	<h1><a href="#node2">node2</a></h1>
+	<h2>test</h2>
+	<h2>test</h2>
+	<h2>test</h2>
+	<h3>test</h3>
+	<h3>test</h3>
+	<h2>test</h2>
+	<h1>test</h1>
+	
+</div>
 
 note1:
 ------
@@ -51,8 +61,8 @@ Android最常見之問題就是沒加權限，記得只要有使用Camera、Inte
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     
 
-note2:
-------
+<a name="node2">note2</a>:
+---------------------------------
 
 關於Toast這項功能之問題，通常這物件是用於在視窗以提示的方式顯示訊息，通常用法如下:
 
