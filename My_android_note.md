@@ -689,3 +689,8 @@ code如下:
 
 	((TextView)infoWindow.findViewById(R.id.user_title))
 	
+	不可寫成:
+	
+	((TextView)findViewById(R.id.user_title))
+	
+	
