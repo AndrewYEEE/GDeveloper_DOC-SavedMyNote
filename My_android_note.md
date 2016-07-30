@@ -24,11 +24,18 @@ Auther: Chao Wei-Chu
  });
 </script>
 <div id="category">
-	[Node3:新map物件與引入mapframe寫法不同問題](https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node3新map物件與引入mapframe寫法不同問題)
-	<h3>test</h3>
-	<h3>test</h3>
-	<h2>test</h2>
-	<h1>test</h1>
+	<h3>Note1:Android最基本之問題就是沒加權限(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#note1)</h3>
+	<h3>Note2:Toast功能之常遇問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#note2)</h3>
+	<h3>Node3:新map物件與引入mapframe寫法不同問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node3新map物件與引入mapframe寫法不同問題)</h3>
+	<h3>Node4:使用Intent創造new Activity時要在AndroidManifest.xml加入設定(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node4-使用intent創造new-activity時要在androidmanifestxml加入設定)</h3>
+	<h3>Node5:GPS的三種寫法(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node5-gps的三種寫法)</h3>
+	<h3>Node6:關於在androidView物件上顯示數字之注意事項(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node6-關於在androidview物件上顯示數字之注意事項)</h3>
+	<h3>Node7:將view畫面以Camera取代(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node7-將view畫面以camera取代)</h3>
+	<h3>Node8:AppCompatActivity與FragmentActivity問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node8appcompatactivity與fragmentactivity問題)</h3>
+	<h3>Node9:Error inflating class android.support.design.widget.NavigationView問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node9error-inflating-class-androidsupportdesignwidgetnavigationview問題)</h3>
+	<h3>Node10:map fragment 之意外:android.view.InflateException: Binary XML file line(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node10map-fragment-之意外androidviewinflateexception-binary-xml-file-line)</h3>
+	<h3>Node11:在GoogleMap上的mark加上自訂格式樣式的注意事項(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node11在googlemap上的mark加上自訂格式樣式的注意事項)</h3>
+	<h3>Node12:使用Android POST and GET Request using HttpURLConnection(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node12使用android-post-and-get-request-using-httpurlconnection-)</h3>
 	
 </div>
 
@@ -371,7 +378,103 @@ node5 (GPS的三種寫法)
 ###寫法二:
     Android初學特訓班那本教的
 ###寫法三:
-    已失傳.....(code太亂了)
+    Android 6~5.x App開發教戰手冊這本教的(目前最有用的)
+
+    private GoogleApiClient.OnConnectionFailedListener onConnectionFailedListener= new GoogleApiClient.OnConnectionFailedListener(){
+
+        @Override
+        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+            Toast.makeText(MainActivity.this,"Connect failed.",Toast.LENGTH_SHORT).show();
+            if(!connectionResult.hasResolution()){
+                GooglePlayServicesUtil.getErrorDialog(connectionResult.getErrorCode(),MainActivity.this,0).show();
+                return;
+            }
+            try{
+                connectionResult.startResolutionForResult(MainActivity.this,1);
+            }catch(IntentSender.SendIntentException e){
+                Log.e("MainActivity","Exception while start resolution activity");
+            }
+        }
+    };
+
+    private GoogleApiClient.ConnectionCallbacks connectionCallbacks =
+            new GoogleApiClient.ConnectionCallbacks() {
+
+                @Override
+                public void onConnected(@Nullable Bundle bundle) {
+                    if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return;
+                    }
+                    location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+
+
+
+                    LocationRequest locationRequest=LocationRequest.create()
+                            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                            .setInterval(1000)
+                            .setSmallestDisplacement(1);
+
+                    LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient,locationRequest, locationListener);
+
+                }
+
+                @Override
+                public void onConnectionSuspended(int i) {
+                    Toast.makeText(MainActivity.this,"暫時無連結",Toast.LENGTH_SHORT).show();
+                }
+            };
+
+    private LocationListener locationListener=new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            Toast.makeText(MainActivity.this,"GPS reset: "+location.getLatitude()+" "+location.getLongitude(),Toast.LENGTH_SHORT).show();
+            latLng=new LatLng(location.getLatitude(),location.getLongitude());
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(latLng);
+            map.addMarker(markerOptions);
+
+        }
+    };
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if (googleApiClient == null) {
+            googleApiClient = new GoogleApiClient.Builder(this)
+                    .addApi(LocationServices.API)
+                    .addConnectionCallbacks(connectionCallbacks)
+                    .addOnConnectionFailedListener(onConnectionFailedListener)
+                    .build();
+        }
+        googleApiClient.connect();
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        if(googleApiClient!=null){
+            googleApiClient.disconnect();
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode,int resultCode,Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
+        if(resultCode==RESULT_OK){
+            if(requestCode==1){
+                googleApiClient.connect();
+            }
+        }
+    }
 
 node6: 關於在androidView物件上顯示數字之注意事項:
 ------------------------------------------------
