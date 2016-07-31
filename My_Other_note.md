@@ -5,7 +5,7 @@ Auther: Chao Wei-Chu
 目錄:
 ---------
 
-Note1:[Network][javascript]關於使用Ajax+jquery跨網域存取server時的Access-Control-Allow-Origin解決方式(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_Other_note.md#node1:關於使用Ajax+jquery跨網域存取server時的Access-Control-Allow-Origin解決方式)
+Note1:[Network][javascript]關於使用Ajax+jquery跨網域存取server時的Access-Control-Allow-Origin解決方式(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_Other_note.md#node1關於使用ajaxjquery跨網域存取server時的access-control-allow-origin解決方式)
 
 
 node1:關於使用Ajax+jquery跨網域存取server時的Access-Control-Allow-Origin解決方式
