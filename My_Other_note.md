@@ -12,6 +12,21 @@ node1:關於使用Ajax+jquery跨網域存取server時的Access-Control-Allow-Ori
 --------------------------------------------------------------------------------
 所謂跨站HTTP請求(Cross-site HTTP request)是指發出請求所在網域不同於請求所指向之網域的HTTP請求，基於安全性考量，程式碼所發出的跨站HTTP請求受到相當限制，好比說用XMLHttpRequest物件所發出的請求受限於同源政策(same-origin -policy)，只能發送HTTP請求到和其所來自的相同的網域，不過開發者也希望能發展出安全的跨站請求方法來開發更好、更安全、搭配多種資源的網頁應用。
 
+最常使用的方式:
+
+          $(function(){
+                  $.ajax({
+                    type:     "POST",
+                    url:    "http://example.com/test.jsp",
+                    dataType:   "jsonp", 
+                    success: function (data){
+                            console.log("Get Json Data!");                     
+                    },error: function (data){
+                            console.log("Can Not Get Json Data!!!!!!");
+                    }
+                  });
+        })
+
 1、表單默認提交（get、post）、超鏈接訪問域外的資源，這是允許的，因為在點擊按鈕/超鏈接時，瀏覽器地址已經變了，這就是一個普通的請求，不存在跨域<br>
 2、ajax(借助xmlhttprequest)跨域請求，這是被禁止的，因為ajax就是為了接受接受響應，這違背了，不允許跨域讀的原則<br>
 3、jsonp屬於跨域讀且形式限制為GET方式，它利用了script標籤的特性；這是允許的。因為瀏覽器把跨域讀腳本，當作例外，類似的img、iframe的src都可以請求域外資源<br>
