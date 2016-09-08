@@ -36,7 +36,7 @@ Auther: Chao Wei-Chu
 	<h5>Note10:map fragment 之意外:android.view.InflateException: Binary XML file line(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node10map-fragment-之意外androidviewinflateexception-binary-xml-file-line)</h5>
 	<h5>Note11:在GoogleMap上的mark加上自訂格式樣式的注意事項(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node11在googlemap上的mark加上自訂格式樣式的注意事項)</h5>
 	<h5>Note12:使用Android POST and GET Request using HttpURLConnection(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node12使用android-post-and-get-request-using-httpurlconnection-)</h5>
-	
+	<h5>node13:Snackbar用法及注意事項(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node13:Snackbar用法及注意事項)</h5>
 	<h2>=============================</h2>	
 </div>
 
@@ -1115,5 +1115,19 @@ node12:使用Android POST and GET Request using HttpURLConnection
 	
 	}
 
+node13:Snackbar用法及注意事項 
+---------------------------------------------------------------
+Snackbar 使用方法是跟 Toast 一樣：
+
+	Snackbar.make(contentView, "I am snackbar", Snackbar.LENGTH_SHORT).show();
+
+跟 Toast 不同的是，Snackbar 是以 view 作參數，而不是以 context。這確保 Snackbar 只在有 view 顯示時才出現，不會跟 Toast 般被濫用，在背景 Service 中執行 toast.show()，引致用戶跟本不知是那個 app 在顯示通知的問題。
+舉例來說:
+針對FloatingActionButton存在時才顯示helloworld資訊:
+
+	FloatingActionButton fab=(FloatingActionButton)findViewById(R.id.fab);
+	Snackbar.make(fab, "helloworld", Snackbar.LENGTH_SHORT).show();
 	
+也就是說若現在使用者正在觀看的頁面並沒有FloatingActionButton這個View，則即使條件觸發也不會顯示helloworld.
+
 	
