@@ -1130,4 +1130,50 @@ Snackbar 使用方法是跟 Toast 一樣：
 	
 也就是說若現在使用者正在觀看的頁面並沒有FloatingActionButton這個View，則即使條件觸發也不會顯示helloworld.
 
+node14:method預設大小限制64K的問題
+----------------------------------
+今天遇到一個很奇特的問題，原因是我撰寫的介面本身太大，然後在燒錄到手機時被AndroidStudio擋下來，AndroidStudio表示:
+
+	Error:The number of method references in a .dex file cannot exceed 64K. 
+	Learn how to resolve this issue at https://developer.android.com/tools/building/multidex.html
+
+簡單說明一下:在Android系統中，一個App的所有代碼都在一個Dex文件裡面。Dex是一個類似Jar、存儲了很多Java編譯過的歸檔文件。因為Android系統使用Dalvik虛擬機，所以需要把使用JavaCompiler編譯之後的class文件轉換成Dalvik能夠執行的class文件。這裡需要強調的是，Dex和Jar一樣是一個歸檔文件，裡面仍然是Java代碼對應的字節碼文件。當Android系統啟動一個應用的時候，有一步是對Dex進行優化，這個過程有一個專門的工具來處理，叫DexOpt。DexOpt的執行過程是在第一次加載Dex文件的時候執行的。這個過程會生成一個ODEX文件，即Optimised Dex。
+執行ODex的效率會比直接執行Dex文件的效率要高很多。但是在早期的Android系統中，DexOpt的LinearAlloc存在著限制: Android 2.2和2.3的緩衝區只有5MB，Android 4.x提高到了8MB或16MB。當方法數量過多導致超出緩衝區大小時，會造成dexopt崩潰，導致無法安裝。
+
+另外由於DEX文件格式限制，一個DEX文件中method個數採用使用原生類型short來索引文件中的方法，也就是4個字節共計最多表達65536個method，field/class的個數也均有此限制。對於DEX文件，則是將工程所需全部class文件合併且壓縮到一個DEX文件期間，也就是Android打包的DEX過程中， 單個DEX文件可被引用的方法總數被限制為65536（自己開發以及所引用的Android Framework和第三方類庫的代碼）。
+
+解決方法:
+1.在build.gradle(app)中加入下列設定:
+
+	android {
+	    compileSdkVersion 21
+	    buildToolsVersion "21.1.0"
+	    defaultConfig {
+	        ...
+	        minSdkVersion 14
+	        targetSdkVersion 21
+	        ...
 	
+	        // Enabling multidex support.
+	        multiDexEnabled true     <---------this
+	    }
+	    ...
+	}
+	
+	dependencies {
+	  compile 'com.android.support:multidex:1.+'     <---------this
+	}
+
+2.在AndroidManifest中加入:
+
+	<application
+	        ...
+	        android:name="android.support.multidex.MultiDexApplication">
+	        ...
+	</application>
+	
+在此要特別注意，此解決方式是針對Android版本5.0以下的手機，由官方文件可知:
+	
+	Multidex support for Android 5.0 and higher.
+
+因此若燒入對象是Android5.0以上的手機，因該是不太會出現此錯誤的。
