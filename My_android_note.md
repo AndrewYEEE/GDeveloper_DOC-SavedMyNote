@@ -38,6 +38,7 @@ Auther: Chao Wei-Chu
 	<h5>Note12:使用Android POST and GET Request using HttpURLConnection(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node12使用android-post-and-get-request-using-httpurlconnection-)</h5>
 	<h5>node13:Snackbar用法及注意事項(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node13snackbar用法及注意事項-)</h5>
 	<h5>node14:method預設大小限制64k的問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node14method預設大小限制64k的問題)</h5>
+	<h5>node15引入gradle插件這次是github的所遇到的問題與解法(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node15引入gradle插件這次是github的所遇到的問題與解法)</h5>
 	<h2>=============================</h2>	
 </div>
 
