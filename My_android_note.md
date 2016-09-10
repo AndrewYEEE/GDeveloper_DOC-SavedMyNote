@@ -1178,3 +1178,50 @@ node14:method預設大小限制64K的問題
 	Multidex support for Android 5.0 and higher.
 
 因此若燒入對象是Android5.0以上的手機，因該是不太會出現此錯誤的。
+
+node15:引入Gradle插件(這次是github的)所遇到的問題與解法
+-------------------------------------------------------
+昨天晚上由於因為製作專案的需要，引入別人寫好的gradle插件，別人寫好的插件是放在gihub上，所以提供了直接compile的功能，
+正當我興奮地引入插件，並等待gradle build完成時，Android Studio跳出了一個錯誤，如下:
+
+	Error:Execution failed for task ':app:processDebugManifest'. > Manifest merger failed with multiple errors, see logs
+
+這..這啥?不是已經是寫好的嗎?怎麼會跳出此錯誤...後來上網查，了解此錯誤會發生的原因是因為:AndroidStudio的Gradle插件默認會啟用Manifest Merger Tool，若Library項目中也定義了與主項目相同的屬性（例如默認生成的android:icon和android:theme），則此時會合並失敗，並報上面的錯誤。知道原因後，開始找解法，網上的解決方式如下:
+
+	法1.在Manifest.xml的application標簽下添加tools:replace="android:icon, android:theme"
+	（多個屬性用,隔開，並且記住在manifest根標簽上加入xmlns:tools="http://schemas.android.com/tools"，否則會找不到namespace哦）
+	ex: <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+		    package="com.xxxx.xxxx"
+		    xmlns:tools="http://schemas.android.com/tools"
+		    >...
+		    <application
+		        android:name="com.xxxx.xxxx.xxApplication"
+		        android:allowBackup="false"
+		        android:icon="@drawable/ic_launcher"
+		        android:label="@string/app_name"
+		        android:theme="@style/Theme.Sherlock"
+		        tools:replace="name,icon,label,theme">
+		        ...
+
+	法2.在build.gradle根標簽上加上 useOldManifestMerger true (非正式用法)
+	
+知道解法了~好開心~趕快來解決問題，結果......
+我昨天晚上試了一整晚都失敗，猛跳一樣的錯誤QQ，我的天啊，怎麼試都會錯，還害我差點用壞我原本的專案，於是只好放棄去睡覺。
+隔天我想說我開個新專案再來試試，這次是用一個空白的專案，結果也跳了一個錯誤，如下:
+	
+	Manifest merger failed : uses-sdk:minSdkVersion 15 cannot be smaller than version 19 declared in library [io.github.controlwear:virtualjoystick:0.9.9] C:\Users\user\AndroidStudioProjects\Joytest\app\build\intermediates\exploded-aar\io.github.controlwear\virtualjoystick\0.9.9\AndroidManifest.xml
+	Suggestion: use tools:overrideLibrary="io.github.controlwear.virtual.joystick.android" to force usage
+	
+意思是說我的專案最低sdk是15不符合我引入的這個插件最低sdk是19的需求，這...這甚麼東西啊，怎麼跟我昨天遇到的不一樣(AndroidStudio常這樣)，依然找解決方法，如下:
+
+	法1.把minSdkVersion 15改成minSdkVersion 19阿，都跟你說了最低版本不合了吼
+	
+	法2.在Manifest.xml添加:
+		<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+		    package="com.xxxx.xxxx"
+		    xmlns:tools="http://schemas.android.com/tools"
+		    >...
+		<uses-sdk  tools:overrideLibrary="io.github.controlwear.virtual.joystick.android"></uses-sdk>
+
+我使用第2個方法，然後就很神奇地解決了，也可以放入原本的專案了......雖然不知道怎麼回事，但至少兩種問題都知道如何解決XD。
+
