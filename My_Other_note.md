@@ -6,6 +6,7 @@ Auther: Chao Wei-Chu
 ---------
 
 Note1:[Network][javascript]關於使用Ajax+jquery跨網域存取server時的Access-Control-Allow-Origin解決方式(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_Other_note.md#node1關於使用ajaxjquery跨網域存取server時的access-control-allow-origin解決方式)
+
 Note2:[Network][CSS]撰寫CSS註解時注意事項(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_Other_note.md#node2撰寫css註解時注意事項)
 
 
