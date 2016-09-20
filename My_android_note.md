@@ -1226,3 +1226,36 @@ node15:引入Gradle插件(這次是github的)所遇到的問題與解法
 
 我使用第2個方法，然後就很神奇地解決了，也可以放入原本的專案了......雖然不知道怎麼回事，但至少兩種問題都知道如何解決XD。
 
+node16:GoogleMap畫線問題
+---------------------------------------
+基本上畫線其實很簡單，只要找到兩個座標，用PolylineOptions設定畫線顏色，然後用Polyline將線畫在map上，只有這樣，
+若要動態增加畫線，例如點擊地圖某處立即畫線，可以使用onMapClickListener監聽然後用Polyline.setpoint動態加入點，例如:
+
+	//===================set map click mark==========================
+	final List<LatLng> latLng2=new ArrayList(); //此陣列是為了將之後路線規劃所有的點存起來並用setPoints()畫出
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() { //每點擊一次map就將點擊的座標加入latLng2，並畫線
+            @Override
+            public void onMapClick(LatLng latLng) {
+                //Toast.makeText(FollowFixPoint.this,latLng.latitude+" "+latLng.longitude,Toast.LENGTH_SHORT).show();
+                latLng2.add(new LatLng(latLng.latitude,latLng.longitude));
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(latLng2.get(latLng2.size()-1));
+                polyline.setPoints(latLng2);
+                map.addMarker(markerOptions);
+            }
+        });
+        
+今天一如往常的要加入畫線功能，然後就很神奇的我的線就是一直畫不出來，重點是compiler、AndroidStudio都沒出錯，也沒意外，
+然後點擊的座標也成功的收到，但是他x的線就是不會顯示，我一直檢查到底哪裡寫錯，但是依照往常我之前成功的案例，目前寫法跟
+本就沒錯啊，啊我的線勒?，我還調整線的寬度調到超大，深怕是線太細，結果還是出不來，正當我失望之際，忽然靈光乍現，光明在前
+，我靈機一動，開始檢查所有與GoogleMap有關的所有我寫的code，檢查什麼?1.檢查是否有其他有關Map的觸發函式，檢查的原因在於Android
+把googlemap視為一個view，但一個view的onclickListener通常只會有一個，也就是只能Override一次，也就是說若同時在一個map中同
+時存在多個Onclicklistener，即使針對的是不同的物件，例如一個是針對map本身，一個是針對map中，某個mark上的button(自訂mark(自己上網查))
+Android會分辨不出是哪一個事件觸發，因為都在同一個view中，通常若有遇到過的都知道，此情況如果發生，AndroidStudio也不會發
+生錯誤，Android會以map本身觸發為主，而自動忽略mark的button的觸發，所以要避免此種狀況；2.檢查與之前成功的code不同之處在
+哪，因為有時候問題的出現不是因為你寫錯，而是因為某些條件影響了你寫的功能，造成你的功能出現衝突，這次問題能夠解決，是因
+為我苦惱了一整天，終於發現畫線出不來的問題在於，我有撰寫GPS功能，而依照GPS功能，遇到位置改變時會更新座標，因此我猜我畫
+線的顯示部分，被GPS更新時重設了，因為GPScode搶走了我的map畫面的觸發事件，使的我的map畫面更新(畫線)被無視掉QQ，種之把GPS
+code移除問題就解決了，至於那定位怎麼辦?可以在別的頁面先定位後，再用intent將參數傳遞過來就好了，總之問題解決了~
+        
+        
