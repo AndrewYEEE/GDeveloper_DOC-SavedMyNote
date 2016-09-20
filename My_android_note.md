@@ -1259,4 +1259,19 @@ Android會分辨不出是哪一個事件觸發，因為都在同一個view中，
 線的顯示部分，被GPS更新時重設了，因為GPScode搶走了我的map畫面的觸發事件，使的我的map畫面更新(畫線)被無視掉QQ，種之把GPS
 code移除問題就解決了，至於那定位怎麼辦?可以在別的頁面先定位後，再用intent將參數傳遞過來就好了，總之問題解決了~
         
+node17:依螢幕動態調整大小問題
+---------------------------------------
+相信很多人都會遇到一個問題，就是當你寫的code燒入到螢幕大小不同的手機，會發現排版和原先的設計不一樣，此時要如何解決呢?
+先給個範例:
+
+	 //===================依照螢幕尺寸調整layout大小==================
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);  //先取得螢幕尺寸(pixel)
+        int vWidth = metrics.widthPixels;
+        int vHeight = metrics.heightPixels;
+        RelativeLayout relativeLayout=(RelativeLayout) findViewById(R.id.fix_map_linear);
+        relativeLayout.getLayoutParams().height=(int)(vHeight*0.7);  //針對map進行尺寸調整
         
+假如我有個map要顯示，而且固定站螢幕高度70%此時就可以用上面的方式，先取出螢幕大小後，再指定對應包住mapframe的layout，動態
+改變大小，是不是很簡單~
+
