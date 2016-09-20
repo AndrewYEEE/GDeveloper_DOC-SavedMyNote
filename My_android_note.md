@@ -40,6 +40,7 @@ Auther: Chao Wei-Chu
 	<h5>node14:method預設大小限制64k的問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node14method預設大小限制64k的問題)</h5>
 	<h5>node15:引入gradle插件這次是github的所遇到的問題與解法(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node15引入gradle插件這次是github的所遇到的問題與解法)</h5>
 	<h5>node16:Googlemap畫線問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node16googlemap畫線問題)</h5>
+	<h5>node17:依螢幕動態調整大小問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node17依螢幕動態調整大小問題)</h5>
 	<h2>=============================</h2>	
 </div>
 
