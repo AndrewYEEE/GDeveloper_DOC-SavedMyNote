@@ -175,3 +175,24 @@ node3:Visual Studio 2013錯誤: error LNK2005 已經在xxxxx.obj中定義的問�
 
 我這次是使用第4點的第3小點的方法II解決問題的，在.h檔中要引入的韓式前面加上static。
 
+node4:開發windows網路應用時，遇到inet_addr()函式不能使用問題
+---------------------------------------------------------
+有用Windows Socket API開發過Windows應用程式的人應該都知道inet_addr這個函式，我們都知道若在windows上的程式要存取網路，要利用Windows Socket API，也就是Socket函式庫，利用Socket可以建立兩種連線，分別是TCP與UDP，而Windows提供WSAStartup()動態函式庫以提供所有socket功能，利用SOCKET structure建立Socket，以及closesocket()關閉Socket，其中closesocket()會偷偷執行函式WSASendDisconnect()中斷連線，而在設定位址與port時，需用sockaddr設定，IPv4用sockaddr_in，IPv6用sockaddr_in6，而我這次遇到的問題，是在設定sockaddr_in時，有一項SOCKADDR_IN AddrServ.sin_addr.s_addr=inet_addr(IP);出錯，我很確定我沒有寫錯，而出錯的訊息如下:
+
+          'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+於是上網查了一下，發現原來原本inet_addr()有以下幾個問題:
+          
+          1. inet_addr()只能用在IPv4，若要通用要改成inet_pton()或inet_ntop()
+          2. inet_pton()或inet_ntop()在原本的winsock2.h裡沒有阿，他x的。
+          3. 有幾個winsock2.h中的函式皆因安全醒問題被淘汰，如下:
+                    a. inet_aton() 原因:返回静态空间，非线程安全
+                    b. inet_addr() 原因:返回的整数形式是网络字节序，因为出错时返回-1；而cp为“255.255.255.255”时也返回-1
+                    c. inet_ntoa() 原因:返回静态空间，非线程安全
+                    d. inet_network() 原因:返回的整数形式是主机字节序；被 inet_aton淘汰，因为出错时返回-1；而cp为“255.255.255.255”时也返回-1
+          
+因此查了一下官方解法，解決方式如下:
+          
+          法1.please make sure you define  _WINSOCK_DEPRECATED_NO_WARNINGS before all the include.
+          法2.add #include <WS2tcpip.h> and use inet_pton(AF_INET, IP, buf) to instead of inet_addr(IP).
+          ##另外要將VisualStadio Update至最新版本 (不愧是萬惡的微軟，連VS也要強制更新~)
+
