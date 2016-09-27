@@ -11,6 +11,8 @@ Note2:[Network][CSS]撰寫CSS註解時注意事項(https://github.com/Chao-wei-c
 
 Note3:[MicrosoftAPI/Studio][C/C++]Visual Studio 2013錯誤: error LNK2005 已經在xxxxx.obj中定義的問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_Other_note.md#node3visual-studio-2013錯誤-error-lnk2005-已經在xxxxxobj中定義的問題)
 
+Note4:[MicrosoftAPI/Studio][C/C++]開發windows網路應用時，遇到inet_addr()函式不能使用問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_Other_note.md#node4開發windows網路應用時遇到inet_addr函式不能使用問題)
+
 
 node1:關於使用Ajax+jquery跨網域存取server時的Access-Control-Allow-Origin解決方式
 --------------------------------------------------------------------------------
