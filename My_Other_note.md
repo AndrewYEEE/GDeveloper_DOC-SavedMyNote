@@ -9,6 +9,8 @@ Note1:[Network][javascript]關於使用Ajax+jquery跨網域存取server時的Acc
 
 Note2:[Network][CSS]撰寫CSS註解時注意事項(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_Other_note.md#node2撰寫css註解時注意事項)
 
+Note3:[MicrosoftAPI/Studio][C/C++]Visual Studio 2013錯誤: error LNK2005 已經在xxxxx.obj中定義的問題()
+
 
 node1:關於使用Ajax+jquery跨網域存取server時的Access-Control-Allow-Origin解決方式
 --------------------------------------------------------------------------------
