@@ -115,6 +115,7 @@ node3:Visual Studio 2013錯誤: error LNK2005 已經在xxxxx.obj中定義的問�
 於是上網查了很多資料，大致分析此問題情況如下:
 
 1．重复定義全域變數。可能存在兩種情況：
+
           I.對於一些初學者，有時候會以為需要使用全域變數的地方就可以使用"define"申明一下。其實這是錯誤的，全域變數是針對整個project的。正確的應該是
           在一個CPP文件中定義如下：int g_Test 那麼在使用的CPP文件中就應該使用：extern int g_Test即可，如果還是使用int g_Test，那麼就會產LNK2005
           錯誤，一般錯誤錯誤信息類似:error LNK2005: "int_ _cdecl ssClient(void)" (?ssClient@@YAHXZ) already defined in main.obj。切記的就是
@@ -143,6 +144,7 @@ node3:Visual Studio 2013錯誤: error LNK2005 已經在xxxxx.obj中定義的問�
           #pragma   once      //頭文件主體   
           
 3.使用第三方的庫造成的。這種情況主要是C運行期函數庫和MFC的庫沖突造成的。具體的辦法就是將那個提示出錯的庫放到另外一個庫的前面。另外選擇不同的C函數庫，可能會引起這個錯誤。微軟和C有兩種C運行期函數庫，一種是普通的函數庫：LIBC.LIB，不支持多線程。另外一種是支持多線程的：msvcrt.lib。如果一個工程裏，這兩種函數庫混合使用，可能會引起這個錯誤，一般情況下它需要MFC的庫先於C運行期函數庫被鏈接，因此建議使用支持多線程的msvcrt.lib。所以在使用第三方的庫之前首先要知道它鏈接的是什麼庫，否則就可能造成LNK2005錯誤。如果不得不使用第三方的庫，可以嘗試按下面所說的方法修改，但不能保證一定能解决問題，前兩種方法是微軟提供的：   
+
             A、選擇VC菜單Project->Settings->Link->Catagory選擇Input，再在Ignore   libraries   的Edit欄中填入你需要忽略的庫，如：
             Nafxcwd.lib;Libcmtd.lib。然後在Object/library   Modules的Edit欄中填入正確的庫的順序，這裏需要你能確定什麼是正確的順序，呵呵，God   
             bless   you！   
@@ -153,4 +155,21 @@ node3:Visual Studio 2013錯誤: error LNK2005 已經在xxxxx.obj中定義的問�
             
             關於編譯器的相關處理過程，参考：   
             http://www.donews.net/xzwenlan/archive/2004/12/23/211668.aspx   
+            
+ 4.另外在官方網站有說明還有以下幾種可能:
+ 
+          1.符號在不同程式庫的兩個成員物件中定義不同，而這兩個成員物件都已被使用。
+          2.絕對被定義了兩次，每一個定義具有不同的值。
+          3.標頭檔宣告並定義變數。  可能的解決方案包括：  
+                    I.在 .h 中宣告變數：extern BOOL MyBool;，然後在 .c 或 .cpp 檔案中指派給它：BOOL MyBool = FALSE;。
+                    II.宣告變數 static。
+                    III.宣告變數 selectany。
+          如果您將 uuid.lib 與其他定義 GUID 的 .lib 檔 (例如 oledb.lib 和 adsiid.lib) 結合使用。  例如：  
+
+                    oledb.lib(oledb_i.obj) : error LNK2005: _IID_ITransactionObject
+                    
+                    already defined in uuid.lib(go7.obj)
+          若要修正，請將 /FORCE:MULTIPLE 加入連結器命令列選項，並確保 uuid.lib 是最先參考的程式庫。
+
+我這次是使用第4點的第3小點的方法II解決問題的，在.h檔中要引入的韓式前面加上static。
 
