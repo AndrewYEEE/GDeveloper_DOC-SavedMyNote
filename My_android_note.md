@@ -1276,3 +1276,30 @@ node17:依螢幕動態調整大小問題
 假如我有個map要顯示，而且固定站螢幕高度70%此時就可以用上面的方式，先取出螢幕大小後，再指定對應包住mapframe的layout，動態
 改變大小，是不是很簡單~
 
+node18:Socket教學與程式範例
+--------------------------
+這次寫這篇筆記的原因不是因為我遇到了問題，純粹是因為最近知道了SOCKET這個技術，然後發現它非常的重要，重要到每個語言一定都支援，而且身在這網路時代一定要會的東西。以下開始說明八~
+###1.摘要:
+現在要用程式撰寫網路傳輸功能，普遍有兩種方式，第一種是使用Socket，也是現在要介紹的技術，第二種是使用Http，在我的node12:使用Android POST and GET Request using HttpURLConnection中已經有講解Android的撰寫方式了，有興趣的可以去看看；基本上按照網路上的說法，Socket是最早期的網路傳輸的技術，最基本支援兩種服務，一種是連接的TCP應用服務,另一種是無連接的UDP應用服務，若不知道TCP、UDP是甚麼可以上網查一下。在HTTP中使用的是請求回應方式,表示當APP發出請求時建立連結通道,當客戶端向伺服器發送完請求,伺服器端才能向客戶端返回資料；而在Socket的TCP/IP連線方式是雙方建立連結後可以直接進行資料的雙向傳輸,就不需要每次由客戶端向伺服器發送請求~所以Socket最適合用在比如聊天室功能，只需一次連線，之後就可以一直更新，直到斷線為止。當然Socket一定也支援其他的傳輸方式，等我更深入了解再寫筆記八。
+
+###2.Socket基本介紹:(client)(TCP)
+
+	1.Socket socket = new Socket("192.168.3.119",7628);//創建Socket實例，並綁定連接遠端IP位址和埠
+	2.OutputStream ops = socket.getOutputStream();   //定義一個輸出流，來自于Socket輸出流
+	3.byte[] bytes = b.getBytes();
+	  ops.write(bytes);				 //向輸出流中寫入資料
+	4.ops.flush();                                   //刷行輸出流
+	//================接下來是接收伺服器發送過來的資料===============================
+	5.InputStream ips = socket.getInputStream();	 //定義輸入流，來自于socket的輸入流
+	6.byte[] bytes2 = new byte[20];
+	  ips.read(bytes2);				 //讀取輸入流資料
+	7.String str = new String(bytes2);		 //轉換成字串
+	8.socket.close();	
+	//================這樣Android上Tcp的Socket就完成了，很簡單======================
+
+###3.Socket基本介紹:(client)(UCP)
+
+	
+	
+
+
