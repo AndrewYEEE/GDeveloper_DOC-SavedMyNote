@@ -1284,7 +1284,9 @@ node18:Socket教學與程式範例
 
 
 ###2.Socket基本介紹:(client)(TCP)
+
 可以先參考以下圖片:
+
 ![know](/SocketTCP.jpg)
 
 	1.Socket socket = new Socket("192.168.3.119",7628);//創建Socket實例，並綁定連接遠端IP位址和埠
