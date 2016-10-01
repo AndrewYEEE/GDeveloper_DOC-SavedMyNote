@@ -1345,9 +1345,488 @@ node18:Android 中的 Thread
 	    }
 	}
 
+
 >	在Android中Android UI不是Thread Safe，所以 UI 的互動均由"Main Thread"負責，即執行Activity的那個Thread(例如預設專案中的MainActivity)，其他 Thread 均不能更新 UI，基於 UI 的親善，Main Thread不可以執行費時的工作，否則 User 會因此看到一個失能的 UI 而暴走，因此當Main Thread出現五秒以上的運算時，Android就會丟出 ANR(Application not Responsed)讓 User 可以選擇等待或離去。另外Main Thread中的onCreate()運算如果超過10秒，也會跳出ANR警告。因此有關費時的工作包括網路存取、檔案處理、資料庫讀取或僅只是費時的計算皆要利用其他thread運作。
 
->
+>既然已經知道Android(java)產生Thread的兩大方式，接下來將介紹AndroidThread的溝通方式。
+>以下列出列出五種 Android Thread 之間傳遞資料的方式:
+>>>1. 單向資料管道(pipe)
+>>>2. 共用記憶體(ShareMemory)
+>>>3. Blocking Queue: Producer-Consumer Pattern
+>>>4. Message Queue
+>>>5. 將任務(task)回傳給 Thread
+
+>1. 單向資料管道(pipe)
+>>範例中用 PipedWrite, PipedReader 建立單向資料傳遞。worker thread 可持續讀取 UI thread 產生的文字資料。
+
+![know](/Android Thread 溝通方式.001.png)
+
+	public class PipeExampleActivity extends Activity {
+
+	    PipedReader r;
+	    PipedWriter w;
+
+	    private Thread workerThread;
+
+	    public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+
+			r = new PipedReader();
+			w = new PipedWriter();
+
+			try {
+			    	w.connect(r);
+			} catch (IOException e) {
+			    	e.printStackTrace();
+			}
+
+			workerThread = new Thread(new TextHandlerTask(r));
+			workerThread.start();
+
+			// w.write(); 可持續傳送字串到 TextHandlerTask 另一個讀取資料的 Thread
+	    }
+
+	    private static class TextHandlerTask implements Runnable {
+			private final PipedReader reader;
+
+			public TextHandlerTask(PipedReader reader){
+			    	this.reader = reader;
+			}
+			@Override
+			public void run() {
+				    while(!Thread.currentThread().isInterrupted()){
+						try {
+							    int i;
+							    while((i = reader.read()) != -1){
+									char c = (char) i;
+									//ADD TEXT PROCESSING LOGIC HERE
+									Log.d(TAG, "char = " + c);
+							    }
+
+						} catch (IOException e) {
+						    	e.printStackTrace();
+						}
+				    }
+			}
+	    }
+	}
+
+>2. 共用記憶體(ShareMemory)
+
+![know](/Android Thread 溝通方式.002.png)
+
+>>如果物件屬於以下這幾種，就會被儲存在共用記憶體中，物件的 reference 會儲存在執行緒的 stack:
+>>>>1. 實例成員變數
+>>>>2. 類別成員變數
+>>>>3. 方法中宣告的物件
+>>執行緒的信號通知機制:
+
+![Know](/Thread message info.jpg)
+
+>3. Blocking Queue: Producer-Consumer Pattern
+
+![know](/Android Thread 溝通方式.003.png)
+
+	public class ConsumerProducer {
+	    private final int LIMIT=10;
+	    private BlockingQueue<Integer> blockingQueue = new LinkedBlockingQueue<Integer>(LIMIT);
+
+	    private void produce throws InterruptedException {
+			int value=0;
+			while(true) {
+			    	blockingQueue.put(value);
+			}
+	    }
+
+	    public void consume throws InterruptedException {
+			while(true) {
+			    	int value = blockingQueue.take();
+			}
+	    }
+	}
+
+>4. Message Queue
+>>Message Queue 是最適合用在 Android APP 的溝通機制。
+
+![know](/Android Thread 溝通方式.004.png)
+
+>>>>1. Insert: 利用連接到 consumer thread 的 Handler，producer thread 將訊息插入 queue
+>>>>2. Get: consumer thread 會執行 Looper，從 queue 裡面取得訊息
+>>>>3. Deliver: Handler 負責處理 consumer thread 的訊息。Thread 可以有多個 Handler instance 來處理訊息，Looper 可確保訊息被送到正確的 Handler。
+
+>>UI thread 是唯一預設就與 Looper 相關連的執行緒，UI Looper跟其他 Looper 有些差異:
+>>>>1. 它可以在任何地方被存取: Looper.getMainLooper() 
+>>>>2. 不能被終止： Looper.quit 會丟出 RuntimeException 
+>>>>3. 執行時，透過 Looper.prepareMainLooper() 把 Looper 關聯到 UI thread，每個 APP 都只能做一次
+
+>>基本的訊息發送範例:
+
+	public class LooperActivity extends Activity {
+
+	    LooperThread mLooperThread;
+
+	    // 定義 worker thread
+	    private static class LooperThread extends Thread {
+
+			public Handler mHandler;
+
+			public void run() {
+				    // 將 Looper 與 worker thread 連結在一起
+				    Looper.prepare();
+				    // 設定 Handler，讓 producer 可以插入訊息
+				    mHandler = new Handler() {
+						// 當訊息被送到 worker thread 時的 callback
+						public void handleMessage(Message msg) {
+							    if(msg.what == 0) {
+									doLongRunningOperation();
+							    }
+						}
+				    };
+				    // blocking 呼叫，讓 message queue 可發送訊息給 consumer thread
+				    Looper.loop();
+			}
+
+			private void doLongRunningOperation() {
+			    	// Add long running operation here.
+			}
+	    }
+
+	    public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_looper);
+			// 啟動 worker thread
+			mLooperThread = new LooperThread();
+			mLooperThread.start();
+	    }
+
+	    public void onClick(View v) {
+			if (mLooperThread.mHandler != null) {
+				    // 初始化 message
+				    Message msg = mLooperThread.mHandler.obtainMessage(0);
+				    // 發送訊息mLooperThread.mHandler.sendMessage(msg);
+			}
+	    }
+
+	    protected void onDestroy() {
+			super.onDestroy();
+			// 終止 worker thead，讓 Looper.loop 結束 blocking
+			mLooperThread.mHandler.getLooper().quit();
+	    }
+	}
+
+>>如果有一段時間沒有訊息，就會進入 IdleHandler
+
+	public class ConsumeAndQuitThreadActivity extends Activity {
+	
+	    public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+
+			final ConsumeAndQuitThread consumeAndQuitThread = new ConsumeAndQuitThread();
+			consumeAndQuitThread.start();
+
+			// 模擬多個 threads 隨機插入訊息
+			for (int i = 0; i < 10; i++) {
+				    new Thread(new Runnable() {
+						@Override
+						public void run() {
+							    for (int i = 0; i < 10; i++) {
+									SystemClock.sleep(new Random().nextInt(10));
+									consumeAndQuitThread.enqueueData(i);
+							    }
+						}
+				    }).start();
+			}
+	    }
+
+	    private static class ConsumeAndQuitThread extends Thread implements MessageQueue.IdleHandler {
+
+			private static final String THREAD_NAME = "ConsumeAndQuitThread";
+
+			public Handler mConsumerHandler;
+			private boolean mIsFirstIdle = true;
+
+			public ConsumeAndQuitThread() {
+			    	super(THREAD_NAME);
+			}
+
+			@Override
+			public void run() {
+				    Looper.prepare();
+
+				    mConsumerHandler = new Handler() {
+						@Override
+						public void handleMessage(Message msg) {
+						    // Consume data
+						}
+				    };
+				    // 在啟動背景執行緒時，註冊 IdleHandler
+				    Looper.myQueue().addIdleHandler(this);
+				    Looper.loop();
+			}
+
+
+			@Override
+			public boolean queueIdle() {
+				    if (mIsFirstIdle) {
+						// 不處理第一次的 idle
+						mIsFirstIdle = false;
+						return true;
+				    }
+				    // 發生 idle 時，終止該執行緒
+				    mConsumerHandler.getLooper().quit();
+				    return false;
+			}
+
+			public void enqueueData(int i) {
+			    	mConsumerHandler.sendEmptyMessage(i);
+			}
+	    }
+	}
+
+>>以下是資料訊息
+
+	Message.obtain(Handler h);
+	Message.obtain(Handler h, int what);
+	Message.obtain(Handler h, int what, Object o);
+	Message.obtain(Handler h, int what, int arg1, int arg2);
+	Message.obtain(Handler h, int what, int arg1, int arg2, Object o);
+	
+>>將資料訊息插入 message queue
+
+	boolean sendMessage(Message msg)
+	boolean sendMessageAtFrontOfQueue(Message msg)
+	boolean sendMessageAtTime(Message msg, long uptimeMillis)
+	boolean sendMessageDelayed(Message msg, long delayMillis)
+
+	// 簡單的訊息
+	boolean sendEmptyMessage(int what)
+	boolean sendEmptyMessageAtTime(int what, long uptimeMillis)
+	boolean sendEmptyMessageDelayed(int what, long delayMillis)
+	
+>>以下是任務訊息
+
+	//產生訊息時，同時指定 handler
+	Message m = Message.obtain(handler, runnable);
+	m.sendToTarget();
+
+>>將任務訊息插入 message queue
+
+	boolean post(Runnable r)
+	boolean postAtFrontOfQueue(Runnable r)
+	boolean postAtTime(Runnable r, Object token, long uptimeMillis)
+	boolean post(Runnable r, long uptimeMillis)
+	boolean postDelayed(Runnable r, long delayMillis)
+
+>>雙向傳遞訊息的範例
+
+	public class HandlerExampleActivity extends Activity {
+
+	    private final static int SHOW_PROGRESS_BAR = 1;
+	    private final static int HIDE_PROGRESS_BAR = 0;
+	    private BackgroundThread mBackgroundThread;
+
+	    private TextView mText;
+	    private Button mButton;
+	    private ProgressBar mProgressBar;
+
+	    @Override
+	    public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_handler_example);
+
+			// 當 activity 建立時，就啟動背景執行緒，處理來自 UI thread 的任務
+			mBackgroundThread = new BackgroundThread();
+			mBackgroundThread.start();
+
+			mText = (TextView) findViewById(R.id.text);
+			mProgressBar = (ProgressBar) findViewById(R.id.progress);
+			mButton = (Button) findViewById(R.id.button);
+			mButton.setOnClickListener(new View.OnClickListener() {
+				    @Override
+				    public void onClick(View v) {
+						// 點擊按鈕，將任務傳送給背景執行緒
+						mBackgroundThread.doWork();
+				    }
+			});
+	    }
+
+	    @Override
+	    protected void onDestroy() {
+			super.onDestroy();
+			// 停止背景執行緒
+			mBackgroundThread.exit();
+	    }
+
+	    private final Handler mUiHandler = new Handler() {
+			public void handleMessage(Message msg) {
+
+				    switch(msg.what) {
+						case SHOW_PROGRESS_BAR:
+							    mProgressBar.setVisibility(View.VISIBLE);
+							    break;
+						case HIDE_PROGRESS_BAR:
+							    mText.setText(String.valueOf(msg.arg1));
+							    mProgressBar.setVisibility(View.INVISIBLE);
+							    break;
+				    }
+			}
+	    };
+
+	    private class BackgroundThread extends Thread {
+
+			private Handler mBackgroundHandler;
+
+			public void run() {
+				    // 將 looper 與這個執行緒關聯起來
+				    Looper.prepare();
+				    // 此 Handler 只處理 Runnable
+				    mBackgroundHandler = new Handler();
+				    Looper.loop();
+			}
+
+			public void doWork() {
+				    mBackgroundHandler.post(new Runnable() {
+						@Override
+						public void run() {
+							    // 建立只傳送 what 的 Message 物件，讓 Progress Bar 更新進度
+							    Message uiMsg = mUiHandler.obtainMessage(SHOW_PROGRESS_BAR, 0,
+								    0, null);
+							    // 傳送訊息
+							    mUiHandler.sendMessage(uiMsg);
+
+							    Random r = new Random();
+							    int randomInt = r.nextInt(5000);
+							    SystemClock.sleep(randomInt);
+
+							    // 建立物件，用來移除 progress bar
+							    uiMsg = mUiHandler.obtainMessage(HIDE_PROGRESS_BAR, randomInt,
+								    0, null);
+							    mUiHandler.sendMessage(uiMsg);
+						}
+				    });
+			}
+
+			public void exit() {
+			    	mBackgroundHandler.getLooper().quit();
+			}
+		    }
+	}
+
+>>Handler 也可以利用 Callback interface 建立
+
+	public class HandlerCallbackActivity extends Activity implements Handler.Callback {
+
+	    @Override
+	    public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_handler_callback);
+	    }
+
+	    @Override
+	    public boolean handleMessage(Message msg) {
+			switch (msg.what) {
+				    case 1:
+						msg.what = 11;
+						return true;
+				    default:
+						msg.what = 22;
+						return false;
+			}
+	    }
+
+	    public void onHandlerCallback(View v) {
+			Handler handler = new Handler(this) {
+				    @Override
+				    public void handleMessage(Message msg) {
+						// Process message
+				    }
+			};
+			// 插入訊息，該訊息會被 Callback 攔截
+			handler.sendEmptyMessage(1);
+			handler.sendEmptyMessage(2);
+	    }
+	}
+	
+>>觀察 message queue 的方法，為目前的 message queue 產生 snapshot
+
+	public class MQDebugActivity extends Activity {
+
+	    private static final String TAG = "EAT";
+	    Handler mWorkerHandler;
+
+	    public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_mq_debug);
+
+			Thread t = new Thread() {
+				    @Override
+				    public void run() {
+						Looper.prepare();
+						mWorkerHandler = new Handler() {
+							    @Override
+							    public void handleMessage(Message msg) {
+									Log.d(TAG, "handleMessage - what = " + msg.what);
+							    }
+						};
+						Looper.loop();
+				    }
+			};
+			t.start();
+	    }
+
+	    // Called on button click, i.e. from the UI thread.
+	    public void onClick(View v) {
+			mWorkerHandler.sendEmptyMessageDelayed(1, 2000);
+			mWorkerHandler.sendEmptyMessage(2);
+			mWorkerHandler.obtainMessage(3, 0, 0, new Object()).sendToTarget();
+			mWorkerHandler.sendEmptyMessageDelayed(4, 300);
+			mWorkerHandler.postDelayed(new Runnable() {
+				    @Override
+				    public void run() {
+					Log.d(TAG, "Execute");
+				    }
+			}, 400);
+			mWorkerHandler.sendEmptyMessage(5);
+
+			mWorkerHandler.dump(new LogPrinter(Log.DEBUG, TAG), "");
+	    }
+	}
+
+>>也可以追蹤 message queue 的處理
+
+	Looper.myLopper().setMessageLogging(new LogPrinter(Log.DEBUG, TAG))
+	
+>與 UI Thread 溝通
+>>訊息透過 UI Thread 的 Looper 傳遞給 UI Thread，這個 Looper 可透過 Looper.getMainLooper() 取得。
+
+	Runnable task = new Runnable() {...};
+	new Handler(Looper.getMainLooper()).post(task);
+
+>>UI thread 發布給自己的任務訊息，可繞過訊息傳遞機制，並透過 Activity.runOnUiThread(Runnable ) 立刻被執行。
+>>可在 Application 中透過 Thread ID 的方式識別 UI thread
+
+	public class TestApplication extends Application {
+	    private long mUiThreadId;
+	    private Handler mUiHandler;
+
+	    public void onCreate() {
+			super.onCreate();
+			mUiThreadId = Thread.currentThread().getId();
+			mUiHandler = new Handler();
+	    }
+
+	    public void customRunOnUiThread(Runnable action) {
+			if( Thread.currentThread().getId() != mUiThreadId ) {
+			    mUiHandler.post(action);
+			} else {
+			    action.run();
+			}
+	    }
+	}
+
+
+###Reference:
+[http://blog.maxkit.com.tw/2016/02/android-thread-pipe-blockingqueue.html](http://blog.maxkit.com.tw/2016/02/android-thread-pipe-blockingqueue.html)
 
 
 node1x:Socket教學與程式範例
