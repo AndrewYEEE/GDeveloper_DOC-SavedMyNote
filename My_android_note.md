@@ -1276,7 +1276,81 @@ node17:依螢幕動態調整大小問題
 假如我有個map要顯示，而且固定站螢幕高度70%此時就可以用上面的方式，先取出螢幕大小後，再指定對應包住mapframe的layout，動態
 改變大小，是不是很簡單~
 
-node18:Socket教學與程式範例
+
+node18:Android 中的 Thread
+--------------------------
+>現代的作業系統為了講求多工，基本上皆支援多執行序，也就是MultiThread，讓一個程序在運行的同時，也能呼叫另一個程序執行，使的在同一時間可以有多個程序同時執行，而我們現在就來介紹在AndroidOS中多執行序的概念與寫法。
+
+>在介紹Thread之前,我們必須先把Program和Process這兩個觀念作一個釐清:
+>>+ Program:一群程式碼的集合,用以解決特定的問題。以物件導向的觀念來類比,相當於Class。
+>>+ Process:由Program所產生的執行個體(一個正在執行的program叫process(恐龍本)),一個Program可以同時執行多次,產生多個Process。以物件導向的觀念來類比,相當於Object。每一個Process又由以下兩個東西組成:
+
+>>>>1. 一個Memory Space。相當於Object的variable,不同Process的Memory Space也不同,彼此看不到對方的Memory Space。
+>>>>2. 一個以上的Thread。Thread代表從某個起始點開始(例如main),到目前為止所有函數的呼叫路徑,以及這些呼叫路徑上所用到的區域變數。當然程式的執行狀態,除了紀錄在主記憶體外,CPU內部的暫存器(如Program Counter, Stack Pointer, Program Status Word等)也需要一起紀錄。所以Thread又由下面兩項組成:
+
+>>>>>>- Stack:紀錄函數呼叫路徑,以及這些函數所用到的區域變數(MIPS中的$sp)
+>>>>>>- 目前CPU的狀態(恐龍本)
+
+>由上面的描述中,我們在歸納Thread的重點如下:
+>>>1. 一個Process可以有多個Thread。
+>>>2. 同一個Process內的Thread使用相同的Memory Space,但這些Thread各自擁有其Stack。換句話說,Thread能透過reference存取到相同的Object,但是local variable卻是各自獨立的。
+>>>3. 作業系統會根據Thread的優先權以及已經用掉的CPU時間,在不同的Thread作切換,以讓各個Thread都有機會執行。
+
+>Java以java.lang.Thread這個類別來表示Thread。Class Thread有兩個Constructor:
+>>>1. Thread();
+>>>2. Thread(Runnable);
+>第一個Constrctor沒有參數,第二個需要一個Runnable物件當參數。
+>Runnable是一個interface,定義於java.lang內,其宣告為:
+
+	public interface Runnable {
+    		public void run();
+	}
+	
+>使用Thread()產生的Thread,其進入點為Thread裡的run();使用Thread(Runnable)產生的Thread,其進入點為Runnable物件裡的run()。
+>當run()結束時,這個Thread也就結束了;這和main()結束有相同的效果。其用法以下面範例說明:
+
+	Thread寫法:
+	public class ThreadExample1 extends Thread {
+	    public void run() { 						// override Thread's run()
+			System.out.println("Here is the starting point of Thread.");
+			for (;;) { 							// infinite loop to print message
+				System.out.println("User Created Thread");
+			}
+	    }
+	    public static void main(String[] argv) {
+			Thread t = new ThreadExample1(); 				// 產生Thread物件
+			t.start(); 							// 開始執行t.run()
+			for (;;) {
+				System.out.println("Main Thread");
+			}
+	    }
+	}
+	
+>以上程式執行後,螢幕上會持續印出"User Created Thread"或"Main Thread"的字樣。
+	
+	Runnable寫法:
+	public class ThreadExample2 implements Runnable {
+	    public void run() { 						// implements Runnable run()
+			System.out.println("Here is the starting point of Thread.");
+			for (;;) { 							// infinite loop to print message
+			    System.out.println("User Created Thread");
+			}
+	    }
+	    public static void main(String[] argv) {
+			Thread t = new Thread(new ThreadExample2()); 			// 產生Thread物件
+			t.start(); 							// 開始執行Runnable.run();
+			for (;;) {
+			    System.out.println("Main Thread");
+			}
+	    }
+	}
+
+>	在Android中Android UI不是Thread Safe，所以 UI 的互動均由"Main Thread"負責，即執行Activity的那個Thread(例如預設專案中的MainActivity)，其他 Thread 均不能更新 UI，基於 UI 的親善，Main Thread不可以執行費時的工作，否則 User 會因此看到一個失能的 UI 而暴走，因此當Main Thread出現五秒以上的運算時，Android就會丟出 ANR(Application not Responsed)讓 User 可以選擇等待或離去。另外Main Thread中的onCreate()運算如果超過10秒，也會跳出ANR警告。因此有關費時的工作包括網路存取、檔案處理、資料庫讀取或僅只是費時的計算皆要利用其他thread運作。
+
+>
+
+
+node1x:Socket教學與程式範例
 --------------------------
 這次寫這篇筆記的原因不是因為我遇到了問題，純粹是因為最近知道了SOCKET這個技術，然後發現它非常的重要，重要到每個語言一定都支援，而且身在這網路時代一定要會的東西。以下開始說明八~
 ###1.摘要:
