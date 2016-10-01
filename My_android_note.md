@@ -1356,7 +1356,7 @@ node18:Android 中的 Thread
 >>>4. Message Queue
 >>>5. 將任務(task)回傳給 Thread
 
->1. 單向資料管道(pipe)
+>1.單向資料管道(pipe)
 >>範例中用 PipedWrite, PipedReader 建立單向資料傳遞。worker thread 可持續讀取 UI thread 產生的文字資料。
 
 ![know](/Android Thread 溝通方式.001.png)
@@ -1411,7 +1411,7 @@ node18:Android 中的 Thread
 	    }
 	}
 
->2. 共用記憶體(ShareMemory)
+>2.共用記憶體(ShareMemory)
 
 ![know](/Android Thread 溝通方式.002.png)
 
@@ -1423,7 +1423,7 @@ node18:Android 中的 Thread
 
 ![Know](/Thread message info.jpg)
 
->3. Blocking Queue: Producer-Consumer Pattern
+>3.Blocking Queue: Producer-Consumer Pattern
 
 ![know](/Android Thread 溝通方式.003.png)
 
@@ -1445,7 +1445,7 @@ node18:Android 中的 Thread
 	    }
 	}
 
->4. Message Queue
+>4.Message Queue
 >>Message Queue 是最適合用在 Android APP 的溝通機制。
 
 ![know](/Android Thread 溝通方式.004.png)
@@ -1796,7 +1796,7 @@ node18:Android 中的 Thread
 
 	Looper.myLopper().setMessageLogging(new LogPrinter(Log.DEBUG, TAG))
 	
->與 UI Thread 溝通
+>5.與 UI Thread 溝通
 >>訊息透過 UI Thread 的 Looper 傳遞給 UI Thread，這個 Looper 可透過 Looper.getMainLooper() 取得。
 
 	Runnable task = new Runnable() {...};
