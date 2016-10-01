@@ -1827,7 +1827,7 @@ node18:Android 中的 Thread
 
 ###Reference:
 [http://blog.maxkit.com.tw/2016/02/android-thread-pipe-blockingqueue.html](http://blog.maxkit.com.tw/2016/02/android-thread-pipe-blockingqueue.html)
-
+[http://programming.im.ncnu.edu.tw/J_Chapter9.htm](http://programming.im.ncnu.edu.tw/J_Chapter9.htm)
 
 node1x:Socket教學與程式範例
 --------------------------
