@@ -41,7 +41,7 @@ Auther: Chao Wei-Chu
 	<h5>node15:引入gradle插件這次是github的所遇到的問題與解法(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node15引入gradle插件這次是github的所遇到的問題與解法)</h5>
 	<h5>node16:Googlemap畫線問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node16googlemap畫線問題)</h5>
 	<h5>node17:依螢幕動態調整大小問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node17依螢幕動態調整大小問題)</h5>
-	<h5>node18:Android 中的 Thread 與傳遞資料的方式https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node20android-socket教學與程式範例-1</h5>
+	<h5>node18:Android 中的 Thread 與傳遞資料的方式(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node18android-中的-thread-與傳遞資料的方式)</h5>
 	<h5>node19:Android AsyncTask 與 Handler Thread 的差異(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node19android-asynctask-與-handler-thread-的差異)</h5>
 	<h5>node20:Android Socket教學與程式範例(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node20android-socket教學與程式範例-1)</h5>
 	<h2>=============================</h2>	
@@ -1834,6 +1834,12 @@ node18:Android 中的 Thread 與傳遞資料的方式
 
 node19:Android AsyncTask 與 Handler Thread 的差異
 ------------------------------------------------
+在node18中有提到費時的工作得外使用新的 Thread 來處理，如果這費時的工作處理過程或結果不用與 UI 互動，那麼只要起一個一般的 Thread 即可，但是多半不會這樣，所以就出現了 AsyncTask 與 Handler Thread。之所以會一起比較 AyncTask 與 Handler Thread 的原因就在於他們提供相同的功能，即另使用新的 Thread 進行費時的工作，且可以透過 Main Thread 修改 UI。
+>先講結論，基於易用與可靠性，Android 建議使用 AsyncTask。
+AsyncTask 出現的目的就是在提供簡單易用的方式達成一些的功能，不像 Handler Thread 得與 Handler、Thread 與 Message Queue 搏鬥，AsyncTask 只要定義幾個 Callback 就可以上路了。
+>AsyncTask 內部實做機制為較新且較強的 java.util.concurrent，但較佔資源，而 Handler Thread 則為基本的 Java Thread。
+
+由於 Handler Thread 依靠 Message Queue 與 Main Thread 互動，相對於 AsyncTask，Handler Thread 比較可能發生塞車情況。但 Handler Thread 在即時互動上優於 AsyncTask，因為 Main Thread 可以隨時傳送 Message 給 Handler Thread，而 AsyncTask 不行，只能依照事先定義 Callback 進行。基於輕量環境資源的有限，當執行單一的工作時建議使用 AsyncTask，如下載一個大檔案，但是當執行大量重複性的工作時，建議使用 Handler Thread，如下載多個小圖。
 
 
 
