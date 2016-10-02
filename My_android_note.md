@@ -41,7 +41,7 @@ Auther: Chao Wei-Chu
 	<h5>node15:引入gradle插件這次是github的所遇到的問題與解法(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node15引入gradle插件這次是github的所遇到的問題與解法)</h5>
 	<h5>node16:Googlemap畫線問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node16googlemap畫線問題)</h5>
 	<h5>node17:依螢幕動態調整大小問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node17依螢幕動態調整大小問題)</h5>
-	<h5>node18:Android 中的 Thread</h5>
+	<h5>node18:Android 中的 Thread 與傳遞資料的方式</h5>
 	<h5>node19:Android AsyncTask 與 Handler Thread 的差異</h5>
 	<h5>node20:Android Socket教學與程式範例</h5>
 	<h2>=============================</h2>	
@@ -1280,8 +1280,8 @@ node17:依螢幕動態調整大小問題
 改變大小，是不是很簡單~
 
 
-node18:Android 中的 Thread
---------------------------
+node18:Android 中的 Thread 與傳遞資料的方式
+-----------------------------------------
 >現代的作業系統為了講求多工，基本上皆支援多執行序，也就是MultiThread，讓一個程序在運行的同時，也能呼叫另一個程序執行，使的在同一時間可以有多個程序同時執行，而我們現在就來介紹在AndroidOS中多執行序的概念與寫法。
 
 >在介紹Thread之前,我們必須先把Program和Process這兩個觀念作一個釐清:
