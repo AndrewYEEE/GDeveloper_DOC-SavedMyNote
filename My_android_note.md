@@ -43,7 +43,7 @@ Auther: Chao Wei-Chu
 	<h5>Note17:依螢幕動態調整大小問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node17依螢幕動態調整大小問題)</h5>
 	<h5>Note18:Android 中的 Thread 與傳遞資料的方式(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node18android-中的-thread-與傳遞資料的方式)</h5>
 	<h5>Note19:Android AsyncTask 與 Handler Thread 的差異(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node19android-asynctask-與-handler-thread-的差異)</h5>
-	<h5>Note20:Android Socket教學與程式範例(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node20android-socket教學與程式範例-1)</h5>
+	<h5>Note20:Android Socket教學與程式範例(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node20android-socket教學與程式範例)</h5>
 	<h2>=============================</h2>	
 </div>
 
