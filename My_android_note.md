@@ -73,6 +73,7 @@ Android最常見之問題就是沒加權限，記得只要有使用Camera、Inte
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     
+[返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
 
 note2:Toast功能之常遇問題
 ------------------------
@@ -106,6 +107,7 @@ ex:
         Toast.makeText(this,message,Toast.LENGTH_LONG).show();
     }
     
+[返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
 
 node3:(新map物件與引入mapFrame寫法不同問題)
 -------------------------------------------
@@ -155,6 +157,7 @@ node3:(新map物件與引入mapFrame寫法不同問題)
 
     </RelativeLayout>
 
+[返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
 
 node4: (使用Intent創造new Activity時要在AndroidManifest.xml加入設定)
 ---------------------------------------------------------------------
@@ -315,6 +318,8 @@ home鍵的右邊)，按下去會看到目前正在背景執行的所有程式(�
         </activity>
         
     沒加必出錯。
+
+[返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
 
 node5 (GPS的三種寫法)
 ----------------------
@@ -485,6 +490,8 @@ node5 (GPS的三種寫法)
         }
     }
 
+[返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
+
 node6: 關於在androidView物件上顯示數字之注意事項:
 ------------------------------------------------
 
@@ -501,6 +508,8 @@ node6: 關於在androidView物件上顯示數字之注意事項:
      textView.setText(String.valueOf(count));
 
 即可。
+
+[返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
 
 node7: 將view畫面以Camera取代
 -----------------------------
@@ -740,6 +749,9 @@ node7: 將view畫面以Camera取代
       	}
 
     }
+    
+[返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
+
 node8:AppCompatActivity與FragmentActivity問題
 ---------------------------------------------
 
@@ -771,6 +783,8 @@ node8:AppCompatActivity與FragmentActivity問題
     	
 像這種AppCompatActivity有支援ActionBar的才行。
 
+[返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
+
 node9:Error inflating class android.support.design.widget.NavigationView問題
 ----------------------------------------------------------------------------
 
@@ -782,6 +796,8 @@ node9:Error inflating class android.support.design.widget.NavigationView問題
 		compile 'com.android.support:design:23.1.1' //design support library
 
 意思是指請更新library :)
+
+[返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
 
 node10:map fragment 之意外:android.view.InflateException: Binary XML file line
 ------------------------------------------------------------------------------
@@ -795,6 +811,8 @@ node10:map fragment 之意外:android.view.InflateException: Binary XML file lin
 		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="your Key"/>
 		
 若不加會一直出錯。
+
+[返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
 
 node11:在GoogleMap上的mark加上自訂格式樣式的注意事項
 ----------------------------------------------------
@@ -835,7 +853,9 @@ code如下:
 	不可寫成:
 	
 	((TextView)findViewById(R.id.user_title))
-	
+
+[返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
+
 node12:使用Android POST and GET Request using HttpURLConnection 
 ---------------------------------------------------------------
 相信大家都很想知道Android是如何跟後台資料庫、server溝通、交換資料的?
@@ -1122,6 +1142,8 @@ node12:使用Android POST and GET Request using HttpURLConnection
 	
 	}
 
+[返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
+
 node13:Snackbar用法及注意事項 
 ---------------------------------------------------------------
 Snackbar 使用方法是跟 Toast 一樣：
@@ -1136,6 +1158,8 @@ Snackbar 使用方法是跟 Toast 一樣：
 	Snackbar.make(fab, "helloworld", Snackbar.LENGTH_SHORT).show();
 	
 也就是說若現在使用者正在觀看的頁面並沒有FloatingActionButton這個View，則即使條件觸發也不會顯示helloworld.
+
+[返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
 
 node14:method預設大小限制64K的問題
 ----------------------------------
@@ -1185,6 +1209,8 @@ node14:method預設大小限制64K的問題
 
 因此若燒入對象是Android5.0以上的手機，因該是不太會出現此錯誤的。
 
+[返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
+
 node15:引入Gradle插件(這次是github的)所遇到的問題與解法
 -------------------------------------------------------
 昨天晚上由於因為製作專案的需要，引入別人寫好的gradle插件，別人寫好的插件是放在gihub上，所以提供了直接compile的功能，
@@ -1231,6 +1257,8 @@ node15:引入Gradle插件(這次是github的)所遇到的問題與解法
 
 我使用第2個方法，然後就很神奇地解決了，也可以放入原本的專案了......雖然不知道怎麼回事，但至少兩種問題都知道如何解決XD。
 
+[返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
+
 node16:GoogleMap畫線問題
 ---------------------------------------
 基本上畫線其實很簡單，只要找到兩個座標，用PolylineOptions設定畫線顏色，然後用Polyline將線畫在map上，只有這樣，
@@ -1262,7 +1290,9 @@ Android會分辨不出是哪一個事件觸發，因為都在同一個view中，
 為我苦惱了一整天，終於發現畫線出不來的問題在於，我有撰寫GPS功能，而依照GPS功能，遇到位置改變時會更新座標，因此我猜我畫
 線的顯示部分，被GPS更新時重設了，因為GPScode搶走了我的map畫面的觸發事件，使的我的map畫面更新(畫線)被無視掉QQ，種之把GPS
 code移除問題就解決了，至於那定位怎麼辦?可以在別的頁面先定位後，再用intent將參數傳遞過來就好了，總之問題解決了~
-        
+
+[返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
+
 node17:依螢幕動態調整大小問題
 ---------------------------------------
 相信很多人都會遇到一個問題，就是當你寫的code燒入到螢幕大小不同的手機，會發現排版和原先的設計不一樣，此時要如何解決呢?
@@ -1279,6 +1309,7 @@ node17:依螢幕動態調整大小問題
 假如我有個map要顯示，而且固定站螢幕高度70%此時就可以用上面的方式，先取出螢幕大小後，再指定對應包住mapframe的layout，動態
 改變大小，是不是很簡單~
 
+[返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
 
 node18:Android 中的 Thread 與傳遞資料的方式
 -----------------------------------------
@@ -1832,6 +1863,8 @@ node18:Android 中的 Thread 與傳遞資料的方式
 [http://blog.maxkit.com.tw/2016/02/android-thread-pipe-blockingqueue.html](http://blog.maxkit.com.tw/2016/02/android-thread-pipe-blockingqueue.html)
 [http://programming.im.ncnu.edu.tw/J_Chapter9.htm](http://programming.im.ncnu.edu.tw/J_Chapter9.htm)
 
+[返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
+
 node19:Android AsyncTask 與 Handler Thread 的差異
 ------------------------------------------------
 在note18中有提到費時的工作得外使用新的 Thread 來處理，如果這費時的工作處理過程或結果不用與 UI 互動，那麼只要起一個一般的 Thread 即可，但是多半不會這樣，所以就出現了 AsyncTask 與 Handler Thread。之所以會一起比較 AyncTask 與 Handler Thread 的原因就在於他們提供相同的功能，即另使用新的 Thread 進行費時的工作，且可以透過 Main Thread 修改 UI。
@@ -1840,8 +1873,10 @@ AsyncTask 出現的目的就是在提供簡單易用的方式達成一些的功�
 >AsyncTask 內部實做機制為較新且較強的 java.util.concurrent，但較佔資源，而 Handler Thread 則為基本的 Java Thread。
 
 由於 Handler Thread 依靠 Message Queue 與 Main Thread 互動，相對於 AsyncTask，Handler Thread 比較可能發生塞車情況。但 Handler Thread 在即時互動上優於 AsyncTask，因為 Main Thread 可以隨時傳送 Message 給 Handler Thread，而 AsyncTask 不行，只能依照事先定義 Callback 進行。基於輕量環境資源的有限，當執行單一的工作時建議使用 AsyncTask，如下載一個大檔案，但是當執行大量重複性的工作時，建議使用 Handler Thread，如下載多個小圖。
+###Reference:
+[http://cw1057.blogspot.tw/2011/12/android-asynctask-handler-thread.html](http://cw1057.blogspot.tw/2011/12/android-asynctask-handler-thread.html)
 
-
+[返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
 
 node20:Android Socket教學與程式範例
 --------------------------
@@ -1940,7 +1975,8 @@ node20:Android Socket教學與程式範例
 
 ###3.Socket基本介紹:(client)(UCP)
 
-	
+
+[返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
 	
 
 
