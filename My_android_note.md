@@ -42,7 +42,7 @@ Auther: Chao Wei-Chu
 	<h5>node16:Googlemap畫線問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node16googlemap畫線問題)</h5>
 	<h5>node17:依螢幕動態調整大小問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node17依螢幕動態調整大小問題)</h5>
 	<h5>node18:Android 中的 Thread 與傳遞資料的方式https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node20android-socket教學與程式範例-1</h5>
-	<h5>node19:Android AsyncTask 與 Handler Thread 的差異(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node20android-socket教學與程式範例-1)</h5>
+	<h5>node19:Android AsyncTask 與 Handler Thread 的差異(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node19android-asynctask-與-handler-thread-的差異)</h5>
 	<h5>node20:Android Socket教學與程式範例(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node20android-socket教學與程式範例-1)</h5>
 	<h2>=============================</h2>	
 </div>
