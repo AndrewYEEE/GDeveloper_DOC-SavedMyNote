@@ -36,14 +36,14 @@ Auther: Chao Wei-Chu
 	<h5>Note10:map fragment 之意外:android.view.InflateException: Binary XML file line(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node10map-fragment-之意外androidviewinflateexception-binary-xml-file-line)</h5>
 	<h5>Note11:在GoogleMap上的mark加上自訂格式樣式的注意事項(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node11在googlemap上的mark加上自訂格式樣式的注意事項)</h5>
 	<h5>Note12:使用Android POST and GET Request using HttpURLConnection(https://github.com/Chao-wei-chu/GDeveloper_DOC-Save-My-Android-note-/blob/master/My_android_note.md#node12使用android-post-and-get-request-using-httpurlconnection-)</h5>
-	<h5>node13:Snackbar用法及注意事項(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node13snackbar用法及注意事項-)</h5>
-	<h5>node14:method預設大小限制64k的問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node14method預設大小限制64k的問題)</h5>
-	<h5>node15:引入gradle插件這次是github的所遇到的問題與解法(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node15引入gradle插件這次是github的所遇到的問題與解法)</h5>
-	<h5>node16:Googlemap畫線問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node16googlemap畫線問題)</h5>
-	<h5>node17:依螢幕動態調整大小問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node17依螢幕動態調整大小問題)</h5>
-	<h5>node18:Android 中的 Thread 與傳遞資料的方式(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node18android-中的-thread-與傳遞資料的方式)</h5>
-	<h5>node19:Android AsyncTask 與 Handler Thread 的差異(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node19android-asynctask-與-handler-thread-的差異)</h5>
-	<h5>node20:Android Socket教學與程式範例(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node20android-socket教學與程式範例-1)</h5>
+	<h5>note13:Snackbar用法及注意事項(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node13snackbar用法及注意事項-)</h5>
+	<h5>note14:method預設大小限制64k的問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node14method預設大小限制64k的問題)</h5>
+	<h5>note15:引入gradle插件這次是github的所遇到的問題與解法(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node15引入gradle插件這次是github的所遇到的問題與解法)</h5>
+	<h5>note16:Googlemap畫線問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node16googlemap畫線問題)</h5>
+	<h5>note17:依螢幕動態調整大小問題(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node17依螢幕動態調整大小問題)</h5>
+	<h5>note18:Android 中的 Thread 與傳遞資料的方式(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node18android-中的-thread-與傳遞資料的方式)</h5>
+	<h5>note19:Android AsyncTask 與 Handler Thread 的差異(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node19android-asynctask-與-handler-thread-的差異)</h5>
+	<h5>note20:Android Socket教學與程式範例(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node20android-socket教學與程式範例-1)</h5>
 	<h2>=============================</h2>	
 </div>
 
@@ -1834,7 +1834,7 @@ node18:Android 中的 Thread 與傳遞資料的方式
 
 node19:Android AsyncTask 與 Handler Thread 的差異
 ------------------------------------------------
-在node18中有提到費時的工作得外使用新的 Thread 來處理，如果這費時的工作處理過程或結果不用與 UI 互動，那麼只要起一個一般的 Thread 即可，但是多半不會這樣，所以就出現了 AsyncTask 與 Handler Thread。之所以會一起比較 AyncTask 與 Handler Thread 的原因就在於他們提供相同的功能，即另使用新的 Thread 進行費時的工作，且可以透過 Main Thread 修改 UI。
+在note18中有提到費時的工作得外使用新的 Thread 來處理，如果這費時的工作處理過程或結果不用與 UI 互動，那麼只要起一個一般的 Thread 即可，但是多半不會這樣，所以就出現了 AsyncTask 與 Handler Thread。之所以會一起比較 AyncTask 與 Handler Thread 的原因就在於他們提供相同的功能，即另使用新的 Thread 進行費時的工作，且可以透過 Main Thread 修改 UI。
 >先講結論，基於易用與可靠性，Android 建議使用 AsyncTask。
 AsyncTask 出現的目的就是在提供簡單易用的方式達成一些的功能，不像 Handler Thread 得與 Handler、Thread 與 Message Queue 搏鬥，AsyncTask 只要定義幾個 Callback 就可以上路了。
 >AsyncTask 內部實做機制為較新且較強的 java.util.concurrent，但較佔資源，而 Handler Thread 則為基本的 Java Thread。
@@ -1847,7 +1847,7 @@ node20:Android Socket教學與程式範例
 --------------------------
 這次寫這篇筆記的原因不是因為我遇到了問題，純粹是因為最近知道了SOCKET這個技術，然後發現它非常的重要，重要到每個語言一定都支援，而且身在這網路時代一定要會的東西。以下開始說明八~
 ###1.摘要:
-現在要用程式撰寫網路傳輸功能，普遍有兩種方式，第一種是使用Socket，也是現在要介紹的技術，第二種是使用Http，在我的node12:使用Android POST and GET Request using HttpURLConnection中已經有講解Android的撰寫方式了，有興趣的可以去看看；基本上按照網路上的說法，Socket是最早期的網路傳輸的技術，最基本支援兩種服務，一種是連接的TCP應用服務,另一種是無連接的UDP應用服務，若不知道TCP、UDP是甚麼可以上網查一下。在HTTP中使用的是請求回應方式,表示當APP發出請求時建立連結通道,當客戶端向伺服器發送完請求,伺服器端才能向客戶端返回資料；而在Socket的TCP/IP連線方式是雙方建立連結後可以直接進行資料的雙向傳輸,就不需要每次由客戶端向伺服器發送請求~所以Socket最適合用在比如聊天室功能，只需一次連線，之後就可以一直更新，直到斷線為止。當然Socket一定也支援其他的傳輸方式，等我更深入了解再寫筆記八。另外其實與node18:Android 中的 Thread 也很有關係，因為就像node18一開始所介紹的，Android不允許在Main Thread中有複雜的運算，所以只要牽涉到複雜的運算比如網路連線、資料庫處理等，皆要用新的thread來實作，這回要介紹的socket也不例外。
+現在要用程式撰寫網路傳輸功能，普遍有兩種方式，第一種是使用Socket，也是現在要介紹的技術，第二種是使用Http，在我的note12:使用Android POST and GET Request using HttpURLConnection中已經有講解Android的撰寫方式了，有興趣的可以去看看；基本上按照網路上的說法，Socket是最早期的網路傳輸的技術，最基本支援兩種服務，一種是連接的TCP應用服務,另一種是無連接的UDP應用服務，若不知道TCP、UDP是甚麼可以上網查一下。在HTTP中使用的是請求回應方式,表示當APP發出請求時建立連結通道,當客戶端向伺服器發送完請求,伺服器端才能向客戶端返回資料；而在Socket的TCP/IP連線方式是雙方建立連結後可以直接進行資料的雙向傳輸,就不需要每次由客戶端向伺服器發送請求~所以Socket最適合用在比如聊天室功能，只需一次連線，之後就可以一直更新，直到斷線為止。當然Socket一定也支援其他的傳輸方式，等我更深入了解再寫筆記八。另外其實與note18:Android 中的 Thread 也很有關係，因為就像note18一開始所介紹的，Android不允許在Main Thread中有複雜的運算，所以只要牽涉到複雜的運算比如網路連線、資料庫處理等，皆要用新的thread來實作，這回要介紹的socket也不例外。
 
 ###2.Socket基本介紹:(Server)
 以下我會用實際例子邊舉例邊解釋socket用法。
