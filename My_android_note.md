@@ -1829,12 +1829,86 @@ node18:Android 中的 Thread
 [http://blog.maxkit.com.tw/2016/02/android-thread-pipe-blockingqueue.html](http://blog.maxkit.com.tw/2016/02/android-thread-pipe-blockingqueue.html)
 [http://programming.im.ncnu.edu.tw/J_Chapter9.htm](http://programming.im.ncnu.edu.tw/J_Chapter9.htm)
 
-node1x:Socket教學與程式範例
+node19:Android AsyncTask 與 Handler Thread 的差異
+------------------------------------------------
+
+
+
+node20:Android Socket教學與程式範例
 --------------------------
 這次寫這篇筆記的原因不是因為我遇到了問題，純粹是因為最近知道了SOCKET這個技術，然後發現它非常的重要，重要到每個語言一定都支援，而且身在這網路時代一定要會的東西。以下開始說明八~
 ###1.摘要:
-現在要用程式撰寫網路傳輸功能，普遍有兩種方式，第一種是使用Socket，也是現在要介紹的技術，第二種是使用Http，在我的node12:使用Android POST and GET Request using HttpURLConnection中已經有講解Android的撰寫方式了，有興趣的可以去看看；基本上按照網路上的說法，Socket是最早期的網路傳輸的技術，最基本支援兩種服務，一種是連接的TCP應用服務,另一種是無連接的UDP應用服務，若不知道TCP、UDP是甚麼可以上網查一下。在HTTP中使用的是請求回應方式,表示當APP發出請求時建立連結通道,當客戶端向伺服器發送完請求,伺服器端才能向客戶端返回資料；而在Socket的TCP/IP連線方式是雙方建立連結後可以直接進行資料的雙向傳輸,就不需要每次由客戶端向伺服器發送請求~所以Socket最適合用在比如聊天室功能，只需一次連線，之後就可以一直更新，直到斷線為止。當然Socket一定也支援其他的傳輸方式，等我更深入了解再寫筆記八。
+現在要用程式撰寫網路傳輸功能，普遍有兩種方式，第一種是使用Socket，也是現在要介紹的技術，第二種是使用Http，在我的node12:使用Android POST and GET Request using HttpURLConnection中已經有講解Android的撰寫方式了，有興趣的可以去看看；基本上按照網路上的說法，Socket是最早期的網路傳輸的技術，最基本支援兩種服務，一種是連接的TCP應用服務,另一種是無連接的UDP應用服務，若不知道TCP、UDP是甚麼可以上網查一下。在HTTP中使用的是請求回應方式,表示當APP發出請求時建立連結通道,當客戶端向伺服器發送完請求,伺服器端才能向客戶端返回資料；而在Socket的TCP/IP連線方式是雙方建立連結後可以直接進行資料的雙向傳輸,就不需要每次由客戶端向伺服器發送請求~所以Socket最適合用在比如聊天室功能，只需一次連線，之後就可以一直更新，直到斷線為止。當然Socket一定也支援其他的傳輸方式，等我更深入了解再寫筆記八。另外其實與node18:Android 中的 Thread 也很有關係，因為就像node18一開始所介紹的，Android不允許在Main Thread中有複雜的運算，所以只要牽涉到複雜的運算比如網路連線、資料庫處理等，皆要用新的thread來實作，這回要介紹的socket也不例外。
 
+###2.Socket基本介紹:(Server)
+以下我會用實際例子邊舉例邊解釋socket用法。
+首先是server端，這次的實作server端是採用純java語言撰寫，基本上也不會用Android當server，除非是點對點連線(類似Ad-hoc那種)，先來講解架構，簡單來說架構如以下那張圖:
+
+![know](/thread架構.png)
+
+我們在main thread中串建一個新的thread ServerListener，此thread的功用就是建立一台server，並用一個無限迴圈不端監聽port，看看是否有人連進來，若有則做出相對映的動作。
+
+	main.java
+	public class main{
+		public static void main(String args[]){
+			new ServerListener().start();   //串建一個新的ServerListener Thread，並開始執行(參考node18的解說)
+		}
+	}
+
+	ServerListener.java
+	public class ServerListener extends Thread{  //ServerListener繼承自thread，這樣可以直接將此class當作thread來創建
+		@Override
+		public void run(){		//複寫thread中的run方法，用來指定thread要做的事情
+			try{
+				ServerSocket serverSocket=new ServerSocket(12345);
+				//串建一個serversocket，在後面我們介紹clientSocket時你會發現
+				//和serverSocket不同，serverSocket通常是不指定IP的，因為本身就是server
+				//，只需指定port，而clientSocket就需指定IP和port。
+				while(true){ 		//設定一個無限迴圈，讓server可以不斷的監聽port有無收到請求
+					Socket socket=serverSocket.accept(); //利用accept()方法來接收要求，若沒有接收到要求，會一直停在這裡，直到收到要求才往下執行
+					//當serverSocket.accept收到一個請求時，會回傳一個新的socket物件，所以用一個Socket物件去接收，然後
+					//為這個請求(client)串建一個新的thread(ChatSocket)，並把這個socket傳給此thread，可以把這個socket當作
+					//是發出此請求的client的身分識別，因為每遇到一個新的請求，皆會回傳一個socket，不會重複
+					new ChatSocket(socket).start(); //ChatSocket開始執行
+				}
+				
+			}catch(IOException e){
+				e.printStackTrace();
+			}
+		}
+	}
+
+	ChatSocket.java
+	public class ChatSocket extends Thread{ //繼承自thread
+		Socket socket;
+		public ChatSocket(Socket s){	//將ServerListener thread丟進來的socket接過來
+			this.socket=s;
+		}
+		public void out(String out){    //回應client用
+			try{
+				socket.getOutputStream().write(out.getBytes("UTF-8")); 
+				//利用socket的getOutputStream功能可以取得回覆client的管道，使用write將訊息放入管道
+				//中回傳給client，將string轉為utf-8格式
+			}catch(IOException e){
+				Logger.getLogger(ChatSocket.class.getName()).log(level.SERVERE,null,ex);
+			}
+		}
+		public void run(){
+			try{
+				int count=0;
+				while(true){
+					count++;
+					out(count+" ");  //設定一個無線迴圈，並設定每1秒回復一次client
+					sleep(1000);
+				}
+			}catch (InterruptedException ex){
+				Logger.getLogger(ChatSocket.class.getName()).log(level.SERVERE,null,ex);
+			}
+		}
+		
+	}
+	
+	
 
 ###2.Socket基本介紹:(client)(TCP)
 
