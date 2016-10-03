@@ -1925,9 +1925,145 @@ AsyncTask 的運作有 4 個階段：
 
 node20:Android的Thread大家族(Handler、Message、Looper、MessageQueue)
 -------------------------------------------------------------------
+Android的消息處理有三個核心類：Looper,Handler和Message。其實還有一個Message Queue（消息隊列），但是MQ被封裝到Looper裡面了，我們不會直接與MQ打交道，因此我沒將其作為核心類。下面一一介紹：
+##線程的魔法師Looper
+Looper的字面意思是“循環者”，它被設計用來使一個普通線程變成Looper線程。所謂Looper線程就是循環工作的線程。在程序開發中（尤其是GUI開發中），我們經常會需要一個線程不斷循環，一旦有新任務則執行，執行完繼續等待下一個任務，這就是Looper線程。使用Looper類創建Looper線程很簡單：
+
+	public class LooperThread extends Thread {
+	    @Override
+	    public void run() {
+			// 将当前线程初始化为Looper线程
+			Looper.prepare();
+
+			// ...其他处理，如实例化handler
+
+			// 开始循环处理消息队列
+			Looper.loop();
+	    }
+	}
+
+通過上面兩行核心代碼，你的線程就升級為Looper線程了！！！是不是很神奇？讓我們放慢鏡頭，看看這兩行代碼各自做了什麼。
+
+1. Looper.prepare();
+
+![show](/LooperThread.png)
+
+通過上圖可以看到，現在你的線程中有一個Looper對象，它的內部維護了一個消息隊列MQ。注意，一個Thread只能有一個Looper對象，為什麼呢？咱們來看源碼。
+
+	public class Looper {
+	    // 每个线程中的Looper对象其实是一个ThreadLocal，即线程本地存储(TLS)对象
+	    private static final ThreadLocal sThreadLocal = new ThreadLocal();
+	    // Looper内的消息队列
+	    final MessageQueue mQueue;
+	    // 当前线程
+	    Thread mThread;
+	    // 。。。其他属性
+
+	    // 每个Looper对象中有它的消息队列，和它所属的线程
+	    private Looper() {
+		mQueue = new MessageQueue();
+		mRun = true;
+		mThread = Thread.currentThread();
+	    }
+
+	    // 我们调用该方法会在调用线程的TLS中创建Looper对象
+	    public static final void prepare() {
+		if (sThreadLocal.get() != null) {
+		    // 试图在有Looper的线程中再次创建Looper将抛出异常
+		    throw new RuntimeException("Only one Looper may be created per thread");
+		}
+		sThreadLocal.set(new Looper());
+	    }
+	    // 其他方法
+	}
+
+通過源碼，prepare()背後的工作方式一目了然，其核心就是將looper對象定義為ThreadLocal。如果你還不清楚什麼是ThreadLocal，請參考![理解ThreadLocal](http://blog.csdn.net/qjyong/article/details/2158097)。
+
+2. Looper.loop();
+
+![show](/LooperLoop.png)
+
+調用loop方法後，Looper線程就開始真正工作了，它不斷從自己的MQ中取出隊頭的消息(也叫任務)執行。其源碼分析如下：
+
+	public static final void loop() {
+		Looper me = myLooper();  //得到当前线程Looper
+		MessageQueue queue = me.mQueue;  //得到当前looper的MQ
+
+		// 这两行没看懂= = 不过不影响理解
+		Binder.clearCallingIdentity();
+		final long ident = Binder.clearCallingIdentity();
+		// 开始循环
+		while (true) {
+		    Message msg = queue.next(); // 取出message
+		    if (msg != null) {
+			if (msg.target == null) {
+			    // message没有target为结束信号，退出循环
+			    return;
+			}
+			// 日志。。。
+			if (me.mLogging!= null) me.mLogging.println(
+				">>>>> Dispatching to " + msg.target + " "
+				+ msg.callback + ": " + msg.what
+				);
+			// 非常重要！将真正的处理工作交给message的target，即后面要讲的handler
+			msg.target.dispatchMessage(msg);
+			// 还是日志。。。
+			if (me.mLogging!= null) me.mLogging.println(
+				".......");
+
+			// 下面没看懂，同样不影响理解
+			final long newIdent = Binder.clearCallingIdentity();
+			if (ident != newIdent) {
+			    Log.wtf("Looper", "Thread identity changed from 0x"
+				    + Long.toHexString(ident) + " to 0x"
+				    + Long.toHexString(newIdent) + " while dispatching to "
+				    + msg.target.getClass().getName() + " "
+				    + msg.callback + " what=" + msg.what);
+			}
+			// 回收message资源
+			msg.recycle();
+		    }
+		}
+	}
+
+除了prepare()和loop()方法，Looper類還提供了一些有用的方法，比如
+Looper.myLooper()得到當前線程looper對象：
+
+	public static final Looper myLooper() {
+		// 在任意线程调用Looper.myLooper()返回的都是那个线程的looper
+		return (Looper)sThreadLocal.get();
+    	}
+	
+getThread()得到looper對象所屬線程：
+
+	public Thread getThread() { 
+		return mThread; 
+	}
+
+quit()方法結束looper循環：
+
+	public void quit() {
+		// 创建一个空的message，它的target为NULL，表示结束循环消息
+		Message msg = Message.obtain();
+		// 发出消息
+		mQueue.enqueueMessage(msg, 0);
+	}
+
+到此為止，你應該對Looper有了基本的了解，總結幾點：
+
+1. 每個線程有且最多只能有一個Looper對象，它是一個ThreadLocal
+2. Looper內部有一個消息隊列，loop()方法調用後線程開始不斷從隊列中取出消息執行
+3. Looper使一個線程變成Looper線程。
+
+那麼，我們如何往MQ上添加消息呢？下面有請Handler！（掌聲~~~）
+##異步處理大師Handler
 
 
-node20:Android AsyncTask 與 Handler Thread 的差異
+
+###Reference:
+![http://www.cnblogs.com/codingmyworld/archive/2011/09/12/2174255.html](http://www.cnblogs.com/codingmyworld/archive/2011/09/12/2174255.html)
+
+node21:Android AsyncTask 與 Handler Thread 的差異
 ------------------------------------------------
 在note18中有提到費時的工作得外使用新的 Thread 來處理，如果這費時的工作處理過程或結果不用與 UI 互動，那麼只要起一個一般的 Thread 即可，但是多半不會這樣，所以就出現了 AsyncTask 與 Handler Thread。之所以會一起比較 AyncTask 與 Handler Thread 的原因就在於他們提供相同的功能，即另使用新的 Thread 進行費時的工作，且可以透過 Main Thread 修改 UI。
 >先講結論，基於易用與可靠性，Android 建議使用 AsyncTask。
