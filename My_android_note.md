@@ -1977,7 +1977,7 @@ Looper的字面意思是“循環者”，它被設計用來使一個普通線�
 	    // 其他方法
 	}
 
-通過源碼，prepare()背後的工作方式一目了然，其核心就是將looper對象定義為ThreadLocal。如果你還不清楚什麼是ThreadLocal，請參考![理解ThreadLocal](http://blog.csdn.net/qjyong/article/details/2158097)。
+通過源碼，prepare()背後的工作方式一目了然，其核心就是將looper對象定義為ThreadLocal。如果你還不清楚什麼是ThreadLocal，請參考[理解ThreadLocal](http://blog.csdn.net/qjyong/article/details/2158097)。
 
 2. Looper.loop();
 
@@ -2057,11 +2057,228 @@ quit()方法結束looper循環：
 
 那麼，我們如何往MQ上添加消息呢？下面有請Handler！（掌聲~~~）
 ##異步處理大師Handler
+什麼是handler？handler扮演了往MQ上添加消息和處理消息的角色（只處理由自己發出的消息），即通知MQ它要執行一個任務(sendMessage)，並在loop到自己的時候執行該任務(handleMessage)，整個過程是異步的。handler創建時會關聯一個looper，默認的構造方法將關聯當前線程的looper，不過這也是可以set的。默認的構造方法：
 
+	public class handler {
+	    final MessageQueue mQueue;  // 关联的MQ
+	    final Looper mLooper;  // 关联的looper
+	    final Callback mCallback; 
+	    // 其他属性
 
+	    public Handler() {
+		// 没看懂，直接略过，，，
+		if (FIND_POTENTIAL_LEAKS) {
+		    final Class<? extends Handler> klass = getClass();
+		    if ((klass.isAnonymousClass() || klass.isMemberClass() || klass.isLocalClass()) &&
+			    (klass.getModifiers() & Modifier.STATIC) == 0) {
+			Log.w(TAG, "The following Handler class should be static or leaks might occur: " +
+			    klass.getCanonicalName());
+		    }
+		}
+		// 默认将关联当前线程的looper
+		mLooper = Looper.myLooper();
+		// looper不能为空，即该默认的构造方法只能在looper线程中使用
+		if (mLooper == null) {
+		    throw new RuntimeException(
+			"Can't create handler inside thread that has not called Looper.prepare()");
+		}
+		// 重要！！！直接把关联looper的MQ作为自己的MQ，因此它的消息将发送到关联looper的MQ上
+		mQueue = mLooper.mQueue;
+		mCallback = null;
+	    }
+
+	    // 其他方法
+	}
+
+下面我們就可以為之前的LooperThread類加入Handler：
+
+	public class LooperThread extends Thread {
+	    private Handler handler1;
+	    private Handler handler2;
+
+	    @Override
+	    public void run() {
+		// 将当前线程初始化为Looper线程
+		Looper.prepare();
+
+		// 实例化两个handler
+		handler1 = new Handler();
+		handler2 = new Handler();
+
+		// 开始循环处理消息队列
+		Looper.loop();
+	    }
+	}
+
+加入handler後的效果如下圖：
+
+![show](/Handler.png)
+
+可以看到，一個線程可以有多個Handler，但是只能有一個Looper！
+
+###Handler發送消息
+有了handler之後，我們就可以使用post(Runnable), postAtTime(Runnable, long), postDelayed(Runnable, long), sendEmptyMessage(int), sendMessage(Message), sendMessageAtTime(Message, long)和 sendMessageDelayed(Message, long)這些方法向MQ上發送消息了。光看這些API你可能會覺得handler能發兩種消息，一種是Runnable對象，一種是message對象，這是直觀的理解，但其實post發出的Runnable對象最後都被封裝成message對象了，見源碼：
+
+	// 此方法用于向关联的MQ上发送Runnable对象，它的run方法将在handler关联的looper线程中执行
+	    public final boolean post(Runnable r)
+	    {
+	       // 注意getPostMessage(r)将runnable封装成message
+	       return  sendMessageDelayed(getPostMessage(r), 0);
+	    }
+
+	    private final Message getPostMessage(Runnable r) {
+		Message m = Message.obtain();  //得到空的message
+		m.callback = r;  //将runnable设为message的callback，
+		return m;
+	    }
+
+	    public boolean sendMessageAtTime(Message msg, long uptimeMillis)
+	    {
+		boolean sent = false;
+		MessageQueue queue = mQueue;
+		if (queue != null) {
+		    msg.target = this;  // message的target必须设为该handler！
+		    sent = queue.enqueueMessage(msg, uptimeMillis);
+		}
+		else {
+		    RuntimeException e = new RuntimeException(
+			this + " sendMessageAtTime() called with no mQueue");
+		    Log.w("Looper", e.getMessage(), e);
+		}
+		return sent;
+	    }
+
+其他方法就不羅列了，總之通過handler發出的message有如下特點：
+
+1. message.target為該handler對象，這確保了looper執行到該message時能找到處理它的handler，即loop()方法中的關鍵代碼
+
+	msg.target.dispatchMessage(msg);
+
+2. post發出的message，其callback為Runnable對象
+
+###Handler處理消息
+說完了消息的發送，再來看下handler如何處理消息。消息的處理是通過核心方法dispatchMessage ( Message msg)與鉤子方法handleMessage ( Message msg)完成的，見源碼:
+
+	// 处理消息，该方法由looper调用
+	    public void dispatchMessage(Message msg) {
+		if (msg.callback != null) {
+		    // 如果message设置了callback，即runnable消息，处理callback！
+		    handleCallback(msg);
+		} else {
+		    // 如果handler本身设置了callback，则执行callback
+		    if (mCallback != null) {
+			 /* 这种方法允许让activity等来实现Handler.Callback接口，避免了自己编写handler重写handleMessage方法。见http://alex-yang-xiansoftware-com.iteye.com/blog/850865 */
+			if (mCallback.handleMessage(msg)) {
+			    return;
+			}
+		    }
+		    // 如果message没有callback，则调用handler的钩子方法handleMessage
+		    handleMessage(msg);
+		}
+	    }
+
+	    // 处理runnable消息
+	    private final void handleCallback(Message message) {
+		message.callback.run();  //直接调用run方法！
+	    }
+	    // 由子类实现的钩子方法
+	    public void handleMessage(Message msg) {
+	    }
+
+可以看到，除了handleMessage ( Message msg)和Runnable對象的run方法由開發者實現外（實現具體邏輯），handler的內部工作機制對開發者是透明的。這正是handler API設計的精妙之處！
+
+###Handler的用處
+我在小標題中將handler描述為“異步處理大師”，這歸功於Handler擁有下面兩個重要的特點：
+
+1. handler可以在任意線程發送消息，這些消息會被添加到關聯的MQ上。
+
+![show](/HandlerProcess.png)
+
+2. handler是在它關聯的looper線程中處理消息的。
+
+![show](/HandlerProcess2.png)
+
+這就解決了android最經典的不能在其他非主線程中更新UI的問題。android的主線程也是一個looper線程 (looper在android中運用很廣)，我們在其中創建的handler默認將關聯主線程MQ。因此，利用handler的一個solution就是在activity中創建handler並將其引用傳遞給worker thread，worker thread執行完任務後使用handler發送消息通知activity更新UI。(過程如圖)
+
+![show](/HandlerProcess3.png)
+
+下面給出sample代碼，僅供參考：
+
+	public class TestDriverActivity extends Activity {
+	    private TextView textview;
+
+	    @Override
+	    protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
+		textview = (TextView) findViewById(R.id.textview);
+		// 创建并启动工作线程
+		Thread workerThread = new Thread(new SampleTask(new MyHandler()));
+		workerThread.start();
+	    }
+
+	    public void appendText(String msg) {
+		textview.setText(textview.getText() + "\n" + msg);
+	    }
+
+	    class MyHandler extends Handler {
+		@Override
+		public void handleMessage(Message msg) {
+		    String result = msg.getData().getString("message");
+		    // 更新UI
+		    appendText(result);
+		}
+	    }
+	}
+
+	public class SampleTask implements Runnable {
+	    private static final String TAG = SampleTask.class.getSimpleName();
+	    Handler handler;
+
+	    public SampleTask(Handler handler) {
+		super();
+		this.handler = handler;
+	    }
+
+	    @Override
+	    public void run() {
+		try {  // 模拟执行某项任务，下载等
+		    Thread.sleep(5000);
+		    // 任务完成后通知activity更新UI
+		    Message msg = prepareMessage("task completed!");
+		    // message将被添加到主线程的MQ中
+		    handler.sendMessage(msg);
+		} catch (InterruptedException e) {
+		    Log.d(TAG, "interrupted!");
+		}
+
+	    }
+
+	    private Message prepareMessage(String str) {
+		Message result = handler.obtainMessage();
+		Bundle data = new Bundle();
+		data.putString("message", str);
+		result.setData(data);
+		return result;
+	    }
+
+	}
+
+當然，handler能做的遠遠不僅如此，由於它能post Runnable對象，它還能與Looper配合實現經典的Pipeline Thread(流水線線程)模式。請參考此文[Android Guts: Intro to Loopers and Handlers](http://mindtherobot.com/blog/159/android-guts-intro-to-loopers-and-handlers/)
+
+##封裝任務Message
+在整個消息處理機制中，message又叫task，封裝了任務攜帶的信息和處理該任務的handler。message的用法比較簡單，這裡不做總結了。但是有這麼幾點需要注意（待補充）：
+
+1. 儘管Message有public的默認構造方法，但是你應該通過Message.obtain()來從消息池中獲得空消息對象，以節省資源。
+2. 如果你的message只需要攜帶簡單的int信息，請優先使用Message.arg1和Message.arg2來傳遞信息，這比用Bundle更省內存
+3. 擅用message.what來標識信息，以便用不同方式處理message。
+
+最後補上我自己畫的架構圖(建議下載來看會比較好):
+
+![show](/Android的Handler、Looper、thread、MessageQueue架構圖.jpg)
 
 ###Reference:
-![http://www.cnblogs.com/codingmyworld/archive/2011/09/12/2174255.html](http://www.cnblogs.com/codingmyworld/archive/2011/09/12/2174255.html)
+[http://www.cnblogs.com/codingmyworld/archive/2011/09/12/2174255.html](http://www.cnblogs.com/codingmyworld/archive/2011/09/12/2174255.html)
 
 node21:Android AsyncTask 與 Handler Thread 的差異
 ------------------------------------------------
