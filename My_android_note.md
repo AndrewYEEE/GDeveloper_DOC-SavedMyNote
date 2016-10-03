@@ -1311,7 +1311,7 @@ node17:依螢幕動態調整大小問題
 
 [返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
 
-node18:Android 中的 Thread 與傳遞資料的方式
+node18:Android 中的 Thread 傳遞資料的方式
 -----------------------------------------
 >現代的作業系統為了講求多工，基本上皆支援多執行序，也就是MultiThread，讓一個程序在運行的同時，也能呼叫另一個程序執行，使的在同一時間可以有多個程序同時執行，而我們現在就來介紹在AndroidOS中多執行序的概念與寫法。
 
@@ -1381,6 +1381,8 @@ node18:Android 中的 Thread 與傳遞資料的方式
 
 
 >	在Android中Android UI不是Thread Safe，所以 UI 的互動均由"Main Thread"負責，即執行Activity的那個Thread(例如預設專案中的MainActivity)，其他 Thread 均不能更新 UI，基於 UI 的親善，Main Thread不可以執行費時的工作，否則 User 會因此看到一個失能的 UI 而暴走，因此當Main Thread出現五秒以上的運算時，Android就會丟出 ANR(Application not Responsed)讓 User 可以選擇等待或離去。另外Main Thread中的onCreate()運算如果超過10秒，也會跳出ANR警告。因此有關費時的工作包括網路存取、檔案處理、資料庫讀取或僅只是費時的計算皆要利用其他thread運作。
+
+>#####要做到背景執行，可以使用 Service、Thread 及 AsyncTask 這 3 種類別。
 
 >既然已經知道Android(java)產生Thread的兩大方式，接下來將介紹AndroidThread的溝通方式。
 >以下列出列出五種 Android Thread 之間傳遞資料的方式:
@@ -1865,7 +1867,67 @@ node18:Android 中的 Thread 與傳遞資料的方式
 
 [返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
 
-node19:Android AsyncTask 與 Handler Thread 的差異
+node19:Android AsyncTask----Thread之外的另一選擇
+-----------------------------------------------
+>要做到背景執行，可以使用 Service、Thread 及 AsyncTask 這 3 種類別。
+
+AsyncTask (API level 3，所以幾乎所有目前在市面上流通的 Android 版本皆可使用)
+是除了Thread之外的另一種選擇，Android 團隊鼓勵主執行緒(UI thread/Main thread) 專注於操作和畫面的流暢呈現，其餘工作 (如網路資料傳輸、檔案/磁碟/資料存取) 最好都在背景執行；Thread 通常要搭配 Handler 使用，而 AsyncTask 用意在簡化背景執行 Thread 程式碼的撰寫。
+
+>如果您預期要執行的工作能在幾秒內完成，就可以選擇使用 AsyncTask，若執行的時間很長，Android 則強烈建議採用 Executor, ThreadPoolExecutor 及 FutureTask。
+
+要使用 AsyncTask，必定要建立一個繼承自 AsyncTask 的子類別，並傳入 3 項資料：
+
+1. Params -- 要執行 doInBackground() 時傳入的參數，數量可以不止一個 
+2. Progress -- doInBackground() 執行過程中回傳給 UI thread 的資料，數量可以不止一個
+3. Rsesult -- 傳回執行結果， 若您沒有參數要傳入，則填入 Void (注意 V 為大寫)。
+
+AsyncTask<Params, Progress, Result>，這是基本的架構，使用泛型來定義參數，泛型意思是，你可以定義任意的資料型態給他。
+	
+	另一種解釋:
+	Params ： 參數，你要餵什麼樣的參數給它。
+	Progress ： 進度條，進度條的資料型態要用哪種。
+	Result ： 結果，你希望這個背景任務最後會有什麼樣的結果回傳給你。
+	
+AsyncTask 的運作有 4 個階段：
+
+1. onPreExecute -- AsyncTask 執行前的準備工作，例如畫面上顯示進度表，
+2. doInBackground -- 實際要執行的程式碼就是寫在這裡，
+3. onProgressUpdate -- 用來顯示目前的進度，
+4. onPostExecute -- 執行完的結果 - Result 會傳入這裡。
+>除了 doInBackground，其他 3 個 method 都是在 UI thread 呼叫
+
+![show](/AsyncTask基本架構.jpg)
+
+如果你要執行一個AsyncTask必須在Main Thread上面呼叫execute, 否則callback method將會傳不到。
+
+	AsyncTask task = new MyTask();
+	task.execute(/*參數*/);
+	
+如果你要取消一個AsyncTask可以這樣
+	
+	AsyncTask task = new MyTask();
+	task.execute(/*參數*/);
+	task.cancel(true);
+	
+關於 AsyncTask 的使用，有幾項原則必須遵守：
+
+1. AsyncTask 必須在 UI 主執行緒載入(JELLY_BEAN 版本開始會自動執行此事)。 
+2. 必須在 UI 主執行緒建立 AsyncTask。  
+3. 必須在 UI 主執行緒呼叫 AsyncTask.execute()。  
+4. 不要自行呼叫 onPreExecute()，onPostExecute()，doInBackground()， onProgressUpdate()。  
+5. AsyncTask 只能執行一次。
+
+關於AsyncTask的知識:
+1.當你呼叫execute()方法時, 則會使用預設的ThreadPool, 而預設的ThreadPool只會有5個core Thread, 
+因此如果超過5個task將會被放進Queue等待
+
+
+node20:Android的Thread大家族(Handler、Message、Looper、MessageQueue)
+-------------------------------------------------------------------
+
+
+node20:Android AsyncTask 與 Handler Thread 的差異
 ------------------------------------------------
 在note18中有提到費時的工作得外使用新的 Thread 來處理，如果這費時的工作處理過程或結果不用與 UI 互動，那麼只要起一個一般的 Thread 即可，但是多半不會這樣，所以就出現了 AsyncTask 與 Handler Thread。之所以會一起比較 AyncTask 與 Handler Thread 的原因就在於他們提供相同的功能，即另使用新的 Thread 進行費時的工作，且可以透過 Main Thread 修改 UI。
 >先講結論，基於易用與可靠性，Android 建議使用 AsyncTask。
@@ -1878,7 +1940,7 @@ AsyncTask 出現的目的就是在提供簡單易用的方式達成一些的功�
 
 [返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
 
-node20:Android Socket教學與程式範例
+node21:Android Socket教學與程式範例
 --------------------------
 這次寫這篇筆記的原因不是因為我遇到了問題，純粹是因為最近知道了SOCKET這個技術，然後發現它非常的重要，重要到每個語言一定都支援，而且身在這網路時代一定要會的東西。以下開始說明八~
 ###1.摘要:
