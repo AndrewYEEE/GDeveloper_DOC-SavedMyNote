@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/park1"
+        android:title="斗六火車站旁停車場"
+        ></item>
+    <item
+        android:id="@+id/park2"
+        android:title="雲林溪平面府前段停車場"
+        ></item>
+    <item
+        android:id="@+id/park3"
+        android:title="雲林溪平面中山段停車場"
+        ></item>
+    <item
+        android:id="@+id/park4"
+        android:title="雲林溪平面民生段停車場"
+        ></item>
+</menu>
