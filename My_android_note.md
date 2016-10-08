@@ -2496,6 +2496,89 @@ Android內建瀏覽器不支援WebSocket Client端，導致使用 HTML5 開發�
 
 程式碼範例:
 
+	public class WebSocketserver extends WebSocketServer { //繼承WebSocketServer
+	
+		public WebSocketserver(int port) throws UnknownHostException {
+			super(new InetSocketAddress(port));
+		} //設定constructor(讀取port)
+
+		public WebSocketserver(InetSocketAddress address) {
+			super(address);
+		} //設定constructor(讀取位置)，server的IP位置是自動取得，不需設定
+
+	       //以下必須覆寫四種方法:onOpen、onClose、onMessage、onError
+		@Override
+		public void onOpen(WebSocket client, ClientHandshake handshake) {  
+
+			//sendToAll(client.getRemoteSocketAddress().getAddress().getHostAddress()+ " 进入房间 ！");
+
+			System.out.println(client.getRemoteSocketAddress().getAddress() //client.getRemoteSocketAddress().getAddress().getHostAddress()在取得用戶端IP
+					.getHostAddress()
+					+ " 进入房间 ！");
+		} //當有client連進來時觸發此函式，client變數負責識別用戶端，handshake負責記錄握手狀態，連線是自動建立的
+
+		@Override
+		public void onClose(WebSocket client, int code, String reason, boolean remote) {
+
+			//sendToAll(client.getRemoteSocketAddress().getAddress().getHostAddress()+ " 离开房间 ！");
+
+			System.out.println(client.getRemoteSocketAddress().getAddress()
+					.getHostAddress()
+					+ " 离开房间 ！");
+		}//當有client斷線時觸發此函式，client變數負責識別用戶端，code紀錄狀態代碼，reason紀錄狀態資訊，remote表示對方是否已斷線
+
+		@Override
+		public void onMessage(WebSocket client, String message) {
+
+			//sendToAll("["+ client.getRemoteSocketAddress().getAddress().getHostAddress()+ "]" + message);
+
+			System.out.println("["
+					+ client.getRemoteSocketAddress().getAddress().getHostAddress()
+					+ "]" + message);
+		}//當用戶端傳送訊息(String or Bytes[])過來時觸發的函式，client變數負責識別用戶端，message負責記錄傳過來的訊息
+
+		@Override
+		public void onError(WebSocket client, Exception e) {
+			e.printStackTrace();
+			if (client != null) {
+				client.close();
+			}
+		}//當與用戶端的連線發生意外時觸發，先確認client變數是否有用戶端使用，再關閉用戶端連線
+	}
+	
+在main方法中開啟服務
+
+	// 发送给所有的聊天者
+	/*
+        private void sendToAll(String text) {
+		Collection<WebSocket> clients = connections(); //取得目前所有的用戶端身分
+		
+              synchronized (clients) { //使用WebSocket內建同步函式
+			for (WebSocket client : clients) { //取得所有的client，並向他們回傳訊息
+				client.send(text);
+			}
+		}
+	}
+        */
+	// 测试
+        /*
+	public static void main(String[] args) throws InterruptedException,
+			IOException {
+
+		int port = 8887; //隨機設定一個port
+
+		WebSocketserver server = new WebSocketserver(port); //創建WebSocketServer物件，並把port丟給它
+		server.start(); //WebSocketServer開始執行，在此注意，只要有新的client連進來，server會自動配對，不需像Socket還要使用accept()來接收client
+
+		System.out.println("房间已开启，等待客户端接入，端口号: " + server.getPort());
+
+		BufferedReader webSocketIn = new BufferedReader(new InputStreamReader(System.in)); //設定用戶端傳送訊息buffer，和Android的Socket、HttpURLConnection的BufferedReader使用方式一樣
+
+		while (true) { //無線迴圈，不斷地在接收用戶端傳來的訊息
+			String stringIn = webSocketIn.readLine(); 
+			server.sendToAll(stringIn); //將傳來的訊息丟回給全部的client
+		}
+	}
 
 
 #####三、實作成果:
