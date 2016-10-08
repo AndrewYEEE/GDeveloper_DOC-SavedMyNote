@@ -2464,6 +2464,6 @@ Android內建瀏覽器不支援WebSocket Client端，導致使用 HTML5 開發�
 
 其實已經有人實現了這種方式，而且只需要導入一些插件及修改極少的代碼即可采用socket.io的代碼在android的webview中實現websocket。[android-websockets](https://github.com/Chao-wei-chu/android-websockets)
 
-#####使用AndroidStudio正統方式實作APP
+####2.使用AndroidStudio正統方式實作APP
 
 
