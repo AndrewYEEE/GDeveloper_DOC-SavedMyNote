@@ -2468,27 +2468,30 @@ Android內建瀏覽器不支援WebSocket Client端，導致使用 HTML5 開發�
 到目前為止我個人認為Android比較好用的WebSocketClient有：autobahn、AndroidAsync、Java-WebSocket。好不好用其實需要看實際需求而定，此筆記舉例選擇Java-WebSocket。
 
 #####一、Android客戶端的創建（使用Java-WebSocket庫）：
-1. 其實只需要掌握一個類，WebSocketClient即可
+1.其實只需要掌握一個類，WebSocketClient即可
 
 ![show](/pic1.png)
 
-2. 指定IP/域名和端口連接服務器，當服務器端有通知時會回調onMessage方法
+2.指定IP/域名和端口連接服務器，當服務器端有通知時會回調onMessage方法
 
 ![show](/pic2.png)
 
-3. 然後調用connect方法進行連接
+3.然後調用connect方法進行連接
 
 ![show](/pic3.png)
 
-4. 連接後就可以發送消息了，發送消息也很簡單，除了支持String的發送還支持byte發送，好了，客戶端就這麼愉快的寫完了（詳細代碼見後面打包的demo）。
+4.連接後就可以發送消息了，發送消息也很簡單，除了支持String的發送還支持byte發送，好了，客戶端就這麼愉快的寫完了（詳細代碼見後面打包的demo）。
 
 ![show](/pic4.png)
 
 #####二、服務端的創建(JavaCode)：
 
-1-1. Java Application服務端創建（使用Java-WebSocket庫），其實也很簡單，就繼承一個類WebSocketServer：
+1-1. Java Application服務端創建（使用Java-WebSocket庫），其實也很簡單，就繼承一個類WebSocketServer。
+
 1-2. 然後在main方法中開啟服務端，現在就可以用Android客戶端來連接進行聊天、接收推送了，實在是太簡單了。
+
 2-1. Java Web（tomcat）服務端創建，這裡不使用Java-WebSocket庫，直接使用Java API javax.websocket包中的WebSocket相關類（注意Java API只實現了標準的RFC 6455（JSR256），如果你非要選擇其它早期草案則需要用Java-WebSocket來實現，在Java-WebSocket中連接協議"Draft_17"就是標準的RFC 6455（JSR256），另外要使用Java API javax.websocket包中的WebSocket相關類要求JDK7及以上,Tomcat 7.0.49及以上）：
+
 2-2. 然後啟動tomcat就可以愉快的用Android客戶端來連接進行聊天、接收推送了。
 
 程式碼範例:
