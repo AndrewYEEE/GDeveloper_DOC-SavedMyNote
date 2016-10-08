@@ -1923,6 +1923,9 @@ AsyncTask 的運作有 4 個階段：
 因此如果超過5個task將會被放進Queue等待
 
 
+
+
+
 node20:Android的Thread大家族(Handler、Message、Looper、MessageQueue)
 -------------------------------------------------------------------
 Android的消息處理有三個核心類：Looper,Handler和Message。其實還有一個Message Queue（消息隊列），但是MQ被封裝到Looper裡面了，我們不會直接與MQ打交道，因此我沒將其作為核心類。下面一一介紹：
@@ -2293,8 +2296,8 @@ AsyncTask 出現的目的就是在提供簡單易用的方式達成一些的功�
 
 [返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
 
-node21:Android Socket教學與程式範例
---------------------------
+node22:Android Socket教學與程式範例
+---------------------------------
 這次寫這篇筆記的原因不是因為我遇到了問題，純粹是因為最近知道了SOCKET這個技術，然後發現它非常的重要，重要到每個語言一定都支援，而且身在這網路時代一定要會的東西。以下開始說明八~
 ###1.摘要:
 現在要用程式撰寫網路傳輸功能，普遍有兩種方式，第一種是使用Socket，也是現在要介紹的技術，第二種是使用Http，在我的note12:使用Android POST and GET Request using HttpURLConnection中已經有講解Android的撰寫方式了，有興趣的可以去看看；基本上按照網路上的說法，Socket是最早期的網路傳輸的技術，最基本支援兩種服務，一種是連接的TCP應用服務,另一種是無連接的UDP應用服務，若不知道TCP、UDP是甚麼可以上網查一下。在HTTP中使用的是請求回應方式,表示當APP發出請求時建立連結通道,當客戶端向伺服器發送完請求,伺服器端才能向客戶端返回資料；而在Socket的TCP/IP連線方式是雙方建立連結後可以直接進行資料的雙向傳輸,就不需要每次由客戶端向伺服器發送請求~所以Socket最適合用在比如聊天室功能，只需一次連線，之後就可以一直更新，直到斷線為止。當然Socket一定也支援其他的傳輸方式，等我更深入了解再寫筆記八。另外其實與note18:Android 中的 Thread 也很有關係，因為就像note18一開始所介紹的，Android不允許在Main Thread中有複雜的運算，所以只要牽涉到複雜的運算比如網路連線、資料庫處理等，皆要用新的thread來實作，這回要介紹的socket也不例外。
@@ -2393,5 +2396,44 @@ node21:Android Socket教學與程式範例
 
 [返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
 	
+
+node23:WebSocket概觀與Android WebSocket實現
+------------------------------------------
+WebSocket一種在單個 TCP 連線上進行全雙工通訊的協定。WebSocket通訊協定於2011年被IETF定為標準(RFC 6455)<----記一下!等等AndroidCode會提到，並被RFC7936所補充規範，WebSocketAPI被W3C定為標準。WebSocket 是獨立的、建立在 TCP 上的協定，和 HTTP 的唯一關聯是使用 HTTP 協定的101狀態碼進行協定切換，使用的 TCP 埠是80，可以用於繞過大多數防火牆的限制。WebSocket 使得用戶端和伺服器之間的資料交換變得更加簡單，允許伺服端直接向用戶端推播資料而不需要用戶端進行請求，在 WebSocket API 中，瀏覽器和伺服器只需要完成一次交握，兩者之間就直接可以建立永續性的連線，並允許資料進行雙向傳送。
+
+###WebSocket被創造出來的的原因:
+以前很多網站為了實作推播技術，所用的技術都是輪詢(Polling)。在作業系統(Operating System)中我們知道Polling技術是指cpu每隔一段時間向周邊設備詢問是否需要提供服務。在Client-Server架構中，輪詢是在特定的的時間間隔（如每1秒），由瀏覽器對伺服器發出HTTP request，然後由伺服器返回最新的資料給用戶端的瀏覽器。這種傳統的模式帶來很明顯的缺點，即瀏覽器需要不斷的向伺服器發出請求，且HTTP request的header是非常長的，裡面包含的資料可能只是一個很小的值，這樣會占用很多的頻寬和伺服器資源。
+
+而比較新的技術去做polling的效果是Comet，使用了AJAX。但這種技術雖然可達到雙向通訊，但依然需要發出請求，而且在Comet中，普遍採用了長連結，這也會大量消耗伺服器頻寬和資源。面對這種狀況，HTML5定義了WebSocket協定，能更好的節省伺服器資源和頻寬並達到實時通訊。
+
+###WebSocket的優點與特性:
+1. 伺服器與用戶端之間交換的封包檔頭很小，大概只有2位元組。（早期版本7.0）
+2. 伺服器可以主動傳送資料給用戶端，而用戶端無須向伺服器發出請求。
+3. "交握"建立後可以一直保持通訊，直到斷線為止。
+在實作websocket連線過程中，需要透過瀏覽器發出websocket連線請求，然後伺服器發出回應，這個過程通常稱為「交握」（handshaking）。後期的版本大多屬於功能上的擴充，例如使用第7版的交握協議同樣也適用於第8版的交握協議。
+
+ex:瀏覽器請求
+
+	GET / HTTP/1.1
+	Upgrade: websocket
+	Connection: Upgrade
+	Host: example.com
+	Origin: null
+	Sec-WebSocket-Key: sN9cRrP/n9NdMgdcy2VJFQ==
+	Sec-WebSocket-Version: 13
+	
+ex:伺服器回應
+
+	HTTP/1.1 101 Switching Protocols
+	Upgrade: websocket
+	Connection: Upgrade
+	Sec-WebSocket-Accept: fFBooB7FAkLlXgRSz0BT3v4hq5s=
+	Sec-WebSocket-Origin: null
+	Sec-WebSocket-Location: ws://example.com/
+	
+在請求中的「Sec-WebSocket-Key」是隨機的，伺服器端會用這些資料來構造出一個SHA-1的資訊摘要。把「Sec-WebSocket-Key」加上一個魔幻字串「258EAFA5-E914-47DA-95CA-C5AB0DC85B11」。使用SHA-1加密，之後進行BASE-64編碼，將結果做為「Sec-WebSocket-Accept」頭的值，返回給用戶端。
+
+>所有最新的瀏覽器支援最新規範（RFC 6455）的WebSocket協定。一個詳細的測試報告[1]列出了這些瀏覽器支援的Websocket版本。
+
 
 
