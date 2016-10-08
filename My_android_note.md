@@ -2283,6 +2283,8 @@ quit()方法結束looper循環：
 ###Reference:
 [http://www.cnblogs.com/codingmyworld/archive/2011/09/12/2174255.html](http://www.cnblogs.com/codingmyworld/archive/2011/09/12/2174255.html)
 
+[返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
+
 node21:Android AsyncTask 與 Handler Thread 的差異
 ------------------------------------------------
 在note18中有提到費時的工作得外使用新的 Thread 來處理，如果這費時的工作處理過程或結果不用與 UI 互動，那麼只要起一個一般的 Thread 即可，但是多半不會這樣，所以就出現了 AsyncTask 與 Handler Thread。之所以會一起比較 AyncTask 與 Handler Thread 的原因就在於他們提供相同的功能，即另使用新的 Thread 進行費時的工作，且可以透過 Main Thread 修改 UI。
@@ -2587,6 +2589,14 @@ Android內建瀏覽器不支援WebSocket Client端，導致使用 HTML5 開發�
 
 ![show](/Finish2.png)
 
+
+###Reference:
+[http://www.chengxuyuans.com/Android/97798.html](http://www.chengxuyuans.com/Android/97798.html)
+[http://www.moke.tw/wordpress/computer/advanced/438](http://www.moke.tw/wordpress/computer/advanced/438)
+[http://xuepiaoqiyue.blog.51cto.com/4391594/1285791](http://xuepiaoqiyue.blog.51cto.com/4391594/1285791)
+[http://www.jollen.org/blog/2012/10/android-webview-websocket-howto.html](http://www.jollen.org/blog/2012/10/android-webview-websocket-howto.html)
+
+[返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
 
 
 
