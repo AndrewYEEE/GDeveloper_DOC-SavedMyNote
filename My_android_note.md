@@ -2410,6 +2410,7 @@ WebSocket一種在單個 TCP 連線上進行全雙工通訊的協定。WebSocket
 1. 伺服器與用戶端之間交換的封包檔頭很小，大概只有2位元組。（早期版本7.0）
 2. 伺服器可以主動傳送資料給用戶端，而用戶端無須向伺服器發出請求。
 3. "交握"建立後可以一直保持通訊，直到斷線為止。
+
 在實作websocket連線過程中，需要透過瀏覽器發出websocket連線請求，然後伺服器發出回應，這個過程通常稱為「交握」（handshaking）。後期的版本大多屬於功能上的擴充，例如使用第7版的交握協議同樣也適用於第8版的交握協議。
 
 ex:瀏覽器請求
@@ -2433,7 +2434,35 @@ ex:伺服器回應
 	
 在請求中的「Sec-WebSocket-Key」是隨機的，伺服器端會用這些資料來構造出一個SHA-1的資訊摘要。把「Sec-WebSocket-Key」加上一個魔幻字串「258EAFA5-E914-47DA-95CA-C5AB0DC85B11」。使用SHA-1加密，之後進行BASE-64編碼，將結果做為「Sec-WebSocket-Accept」頭的值，返回給用戶端。
 
->所有最新的瀏覽器支援最新規範（RFC 6455）的WebSocket協定。一個詳細的測試報告[1]列出了這些瀏覽器支援的Websocket版本。
+>所有最新的瀏覽器支援最新規範（RFC 6455）的WebSocket協定。一個詳細的測試報告列出了這些瀏覽器支援的Websocket版本。
 
+###Android中的WebSocket概觀
+由上敘可知，顧名思義，websocket也是socket，用來通信的，只是用在web上，所以叫websocket。 websocket是html5規範中的一項，在chrome等主流瀏覽器中都已經支持。但是在我們android的原生瀏覽器卻……他x的不支援，而android中的webview也是用的原生瀏覽器的核心，所以同樣悲劇。
+
+Android內建瀏覽器不支援WebSocket Client端，導致使用 HTML5 開發的App(PhoneGap)無法使用WebSocket與Server建立連線。主要的問題在於 WebView 元件沒有實作 WebSocket 協定。Android SDK + PhoneGap 所製作 HTML5 App 是將WebView封裝至APK裡，所以 WebSocket 無法正常工作是正常的。不過這個問題也沒有那麼難解決，在等待 WebView 加入 WebSocket 以及更多 HTML5 功能前，我們只能暫時自行實作。還好，現在有很多 Open source 的 WebSocket 程式庫可供使用。
+
+到目前為止我個人認為Android比較好用的WebSocketClient有：autobahn、AndroidAsync、Java-WebSocket。好不好用其實需要看實際需求而定，此筆記舉例選擇Java-WebSocket。
+
+###Android的WebScoket應用實作
+據我所知，目前大部分簡單的android應用很少會需要用到websocket，這可能也是導致官方初期沒有重視、沒有將其納入基本函式庫的原因，而目前我在網路上研究了一下，通常遇到android不支援webSocket問題的人，是希望將WebSocket實作在下列兩種製作Android APP方式的情形:
+
+##1.使用HTML5製作Android APP:
+沒錯!你沒看錯，就是使用html5實作，現在想要學APP程式，只要用 HTML5 就能夠在 Android、iOS 以及 Windows Phone 上面執行了。HTML5 不是寫網頁程式嗎?是的，所以我們需要透過 Adobe PhoneGap 幫我們把 HTML5 的程式轉成可以安裝、上架的 APP。雖然 HTML5 APP 的效能會受到部份人士的質疑，畢竟它不是原生程式，但它很適合推薦給想進階學習的程式新手。另一方面，如果程式有寫好，HTML5 的效能也不會輸給原生程式。
+
+>事實上二百年前(?)就有神人用 HTML5 寫遊戲了，例如Cut the Rope是先有HTML5網頁才有 APP~
+
+#使用 PhoneGap API
+雖然我們寫的程式是 HTML5，但是必須透過 PhoneGap 才能轉成 APP，所以這個系列的文章會用「PhoneGap(程式)」來取代 HTML5 的字眼。因為並非所有的 HTML5 程式都能順利轉成 APP，也就是說瀏覽器能跑，不代表 APP 能執行。我們必須要撰寫 PhoneGap 看得懂的程式才行。因此僅管 PhoneGap 只算是一個軟體，我們還是會把它作程式語言稱呼。撰寫 PhoneGap 程式基本上和一般的 HTML5 沒有什麼不同，不過如果你需要使用 PhoneGap API，必須在 </head> 之前加入下面的程式碼。
+
+	<script src="phonegap.js"></script>
+
+那麼如果在撰寫phoneGap時遇到要使用websocket的問題時該如何解決呢?目前知道解決方式有兩種:
+1. 使用WebSocket程式庫"Autobahn WebSocket"，現在，只需要自行擴充 WebView，並使用 Autobahn WebSocket 來實作 WebSocket Client 即可。Android WebView 不支援 WebSocket 的問題解決了。在此提供一份簡單的程式碼實作：[android-browser-websocket](https://github.com/Chao-wei-chu/android-browser-websocket)。
+
+2. 在websocket出現之後就有人開發了socket.io，這又是個啥呢？其實它就幹了一個事，就是封裝websocket，使得即使不支持websocket的平台在調用socket.io時也能正常通信。而且在使用socket.io時，不管支不支持websocket，都只要一份代碼就可以。有了socket.io，我們就可以在android環境的webview當中使用socket通信了。但是，android並不支持websocket啊，socket.io到底是怎麼實現的socket通信呢？原來socket.io會在平台不支持websocket的情況下使用其他的方式實現，比如：xhr、flashsocket。在android中，socket.io實現使用的就是xhr方式。xhr是實現了通信，但是與websocket相比，xhr的實現方式性能上還是不能比。那麼有沒有方式讓android也實現真正的websocket呢？有，有人就想出了迂回的辦法：利用webview與頁面可以相會調用的特性，采用JAVA NIO將websocket實現了一遍，這下可就是貨真價實的socket了！
+
+其實已經有人實現了這種方式，而且只需要導入一些插件及修改極少的代碼即可采用socket.io的代碼在android的webview中實現websocket。[android-websockets](https://github.com/Chao-wei-chu/android-websockets)
+
+#使用AndroidStudio正統方式實作APP
 
 
