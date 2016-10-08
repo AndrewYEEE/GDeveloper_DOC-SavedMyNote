@@ -2441,7 +2441,6 @@ ex:伺服器回應
 
 Android內建瀏覽器不支援WebSocket Client端，導致使用 HTML5 開發的App(PhoneGap)無法使用WebSocket與Server建立連線。主要的問題在於 WebView 元件沒有實作 WebSocket 協定。Android SDK + PhoneGap 所製作 HTML5 App 是將WebView封裝至APK裡，所以 WebSocket 無法正常工作是正常的。不過這個問題也沒有那麼難解決，在等待 WebView 加入 WebSocket 以及更多 HTML5 功能前，我們只能暫時自行實作。還好，現在有很多 Open source 的 WebSocket 程式庫可供使用。
 
-到目前為止我個人認為Android比較好用的WebSocketClient有：autobahn、AndroidAsync、Java-WebSocket。好不好用其實需要看實際需求而定，此筆記舉例選擇Java-WebSocket。
 
 ###Android的WebScoket應用實作
 據我所知，目前大部分簡單的android應用很少會需要用到websocket，這可能也是導致官方初期沒有重視、沒有將其納入基本函式庫的原因，而目前我在網路上研究了一下，通常遇到android不支援webSocket問題的人，是希望將WebSocket實作在下列兩種製作Android APP方式的情形:
@@ -2464,6 +2463,49 @@ Android內建瀏覽器不支援WebSocket Client端，導致使用 HTML5 開發�
 
 其實已經有人實現了這種方式，而且只需要導入一些插件及修改極少的代碼即可采用socket.io的代碼在android的webview中實現websocket。[android-websockets](https://github.com/Chao-wei-chu/android-websockets)
 
-####2.使用AndroidStudio正統方式實作APP
+####2.使用AndroidStudio正統方式實作APP:
+
+到目前為止我個人認為Android比較好用的WebSocketClient有：autobahn、AndroidAsync、Java-WebSocket。好不好用其實需要看實際需求而定，此筆記舉例選擇Java-WebSocket。
+
+#####一、Android客戶端的創建（使用Java-WebSocket庫）：
+1. 其實只需要掌握一個類，WebSocketClient即可
+
+![show](/pic1.png)
+
+2. 指定IP/域名和端口連接服務器，當服務器端有通知時會回調onMessage方法
+
+![show](/pic2.png)
+
+3. 然後調用connect方法進行連接
+
+![show](/pic3.png)
+
+4. 連接後就可以發送消息了，發送消息也很簡單，除了支持String的發送還支持byte發送，好了，客戶端就這麼愉快的寫完了（詳細代碼見後面打包的demo）。
+
+![show](/pic4.png)
+
+#####二、服務端的創建(JavaCode)：
+
+1-1. Java Application服務端創建（使用Java-WebSocket庫），其實也很簡單，就繼承一個類WebSocketServer：
+1-2. 然後在main方法中開啟服務端，現在就可以用Android客戶端來連接進行聊天、接收推送了，實在是太簡單了。
+2-1. Java Web（tomcat）服務端創建，這裡不使用Java-WebSocket庫，直接使用Java API javax.websocket包中的WebSocket相關類（注意Java API只實現了標準的RFC 6455（JSR256），如果你非要選擇其它早期草案則需要用Java-WebSocket來實現，在Java-WebSocket中連接協議"Draft_17"就是標準的RFC 6455（JSR256），另外要使用Java API javax.websocket包中的WebSocket相關類要求JDK7及以上,Tomcat 7.0.49及以上）：
+2-2. 然後啟動tomcat就可以愉快的用Android客戶端來連接進行聊天、接收推送了。
+
+程式碼範例:
+
+
+
+#####三、實作成果:
+
+![show](/Finish1.png)
+
+![show](/Finish2.png)
+
+
+
+
+
+
+
 
 
