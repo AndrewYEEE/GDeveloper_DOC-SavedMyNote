@@ -2605,9 +2605,37 @@ Android內建瀏覽器不支援WebSocket Client端，導致使用 HTML5 開發�
 [返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
 
 
+node24:Android Studio 2.x版本常見問題(2016/10/14)
+------------------------------------
+從2016年開始，Android Studio開始正式進入2.x.x版本，隨著版本重1.x晉升到2.x，Android Studio的功能也有了重大的突破，基本上的突破功能如下列所示:
+1. Instant Run: 在開發測試階段最常見的過程就是修改、執行與測試，接著再來一次同樣的過程，不斷地在修改後執行，問題是，編譯一個應用程式需要不算短的時間，少則3-5秒，多則超過一分鐘。有時，只修改了一小段程式碼，執行時卻要花費同樣長的等待時間。Instant Run以軟體解決了這個麻煩，自動判斷修改了那一類的資料，若不是變更如AndroidManifest.xml這類需要重新包裝的內容，則以即時更新模擬器內部的方式，瞬間就能在模擬器看到修改後的執行結果。
+2. Cloud Test Lab: 雲端測試平台讓應用程式可以在雲端上測試結果，雲端測試平台上已提供數百種的裝置與特性配置，開發人員可依照規範與API設計測試流程與驗證條件，將應用程式與測試案例上傳雲端進行自動佈署、測試、回報，我們只需要等它執行完成後，產生測試報告。
+3. 新版模擬器: 新版與前一版本的模擬器在執行上快上三倍，包括CPU、RAM與輸出入的效能都提昇了不只一個等級，使用者當然可以繼續使用如Genymotion第三方模擬器，但現在，新版模擬器已與第三方相差無幾。除此之外，也加入了新的使用者操作介面，在控制、測試如感應器(sensor)的模擬時更加方便，也可以將APK安裝檔直接拖放到模擬器中快速安裝，亦能夠更改模擬器的視窗大小等。
+4. App Indexing: 使用應用程式索引能夠讓我們的應用程式更容易在Google中被搜尋到，Android Studio 2.0提供產生正確的參考網址的功能，能讓開發者將網址加在AndroidManifest.xml中，如此一來，Google應用程式索引服務就能夠找到我們的應用程式，並可直接在Android Studio中測試。
+5. GPU Debugger Preview: 提供在開發OpenGL ES遊戲時一個GPU除錯器介面，讓開發人員能夠在一張張貼圖中找到問題，例如GPU的執行負荷等問題。
+6. 2.2版本(2016/09)新功能1: 2.2的建置速度，比起2.1版本快了10倍，甚至模擬器也快上3倍，透過新的Instant Run功能，使用者可以直接將改變的程式碼，直接部署至運行中的程式。
+7. 2.2版本(2016/09)新功能2: 測試側錄（testing recording）功能。開發者在啟動程式時，同時啟動測試側錄功能，Android Studio則會自動產生Espresso測試碼，「效果就像使用者自己撰寫一樣。」為了確保開發者的App能在各Android裝置上運作順利，測試側錄功能不僅支援本地端開發環境，同時也能在雲端環境Cloud Test Lab使用。
+8. 2.2版本(2016/09)新功能3: Google重新編寫了Layout設計工具，新增約束條件Layout（Contraint Layouts），在此限制下，使用者可以在畫面中擺放元件位置。而UI在此版本也會運作更順暢，豐富的UI介面，必須要搭配巢狀Layout（nested layout），也耗費更多資源，「有了約束條件Layout，就不需要使用巢狀結構」，UI也能運作更順。
 
+總之Android2.x帶來很多新的功能，我原本是使用Android1.x，然後想說竟然這麼神，何不更新看看，於是我就很開心得花了我一個下午更新成2.2版，更新完後我很興奮地打開project想說來體驗一下高速編譯是甚麼感覺，於是按下執行紐，AndroidStudio就非常他x的快速回覆我以下錯誤，讓我再次對2.x版本的快速震撼到:
 
+	Unsupported method: AndroidProject.getPluginGeneration() while running project
+	The version of Gradle you connect to does not support that method.
+	
+花惹發?這甚麼錯誤?於是上網查了一下，得知原因是因為2.2版本自動會把Instant Run開啟，而當你的專案採用舊版的gradle時，Instant Run依舊是開啟狀態，而這時已經不支持這個功能了，所有會報這個錯誤。解決方式如下:
+	
+	Windows & Linux:
+	File -> Settings -> Build, Execution, Deployment -> Instant Run.--->all disable
+	
+	Mac:
+	Android Studio -> Preferences -> Build, Execution, Deployment -> Instant Run.--->all disable
 
+另外AndroidStudio2.x也有缺點，比如Instant Run雖然能大大加快編譯速度，但是它在第一次編譯的時候確實太慢了，雖然2.2比之前的版本已經快很多了，但還是比一般情況慢很多；之前我用的是gradle1.x，但是切換到2.2後編譯時出現了大量的報錯，整整幾百個錯誤讓人不寒而栗，而與其說是錯誤，不如說是警告，絕大部分還是第三方，雖然不影響正常運行程序。
+
+###Reference:
+[http://whitelife.win/2016/09/30/gradle版本切换问题/](http://whitelife.win/2016/09/30/gradle版本切换问题/)
+
+[返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
 
 
 
