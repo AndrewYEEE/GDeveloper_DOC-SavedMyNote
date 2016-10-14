@@ -50,6 +50,7 @@ Auther: Chao Wei-Chu
 	<h2>=============================</h2>	
 </div>
 [Note24:Android Studio 2.x版本常見問題(2016/10/14)](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node24android-studio-2x版本常見問題20161014)
+
 [Note24:Android Studio 2.x版本常見問題(2016/10/14)](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node24android-studio-2x版本常見問題20161014)
 
 
