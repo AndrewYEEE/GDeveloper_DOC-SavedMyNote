@@ -47,10 +47,9 @@ Auther: Chao Wei-Chu
 	<h5>Note21:Android AsyncTask 與 Handler Thread 的差異(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node21android-asynctask-與-handler-thread-的差異)</h5>
 	<h5>Note22:Android Socket教學與程式範例(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node22android-socket教學與程式範例)</h5>
 	<h5>Note23:WebSocket概觀與Android WebSocket實現(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node23websocket概觀與android-websocket實現)</h5>
-	[Note24:Android Studio 2.x版本常見問題(2016/10/14)](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node24android-studio-2x版本常見問題20161014)
 	<h2>=============================</h2>	
 </div>
-
+[Note24:Android Studio 2.x版本常見問題(2016/10/14)](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node24android-studio-2x版本常見問題20161014)
 
 note1:Android最基本之問題就是沒加權限
 -----------------------------------
