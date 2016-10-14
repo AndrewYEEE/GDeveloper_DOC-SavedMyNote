@@ -47,6 +47,7 @@ Auther: Chao Wei-Chu
 	<h5>Note21:Android AsyncTask 與 Handler Thread 的差異(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node21android-asynctask-與-handler-thread-的差異)</h5>
 	<h5>Note22:Android Socket教學與程式範例(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node22android-socket教學與程式範例)</h5>
 	<h5>Note23:WebSocket概觀與Android WebSocket實現(https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node23websocket概觀與android-websocket實現)</h5>
+	<h5>[Note24:Android Studio 2.x版本常見問題(2016/10/14)](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#node24android-studio-2x版本常見問題20161014)</h5>
 	<h2>=============================</h2>	
 </div>
 
@@ -2608,6 +2609,7 @@ Android內建瀏覽器不支援WebSocket Client端，導致使用 HTML5 開發�
 node24:Android Studio 2.x版本常見問題(2016/10/14)
 ------------------------------------
 從2016年開始，Android Studio開始正式進入2.x.x版本，隨著版本重1.x晉升到2.x，Android Studio的功能也有了重大的突破，基本上的突破功能如下列所示:
+
 1. Instant Run: 在開發測試階段最常見的過程就是修改、執行與測試，接著再來一次同樣的過程，不斷地在修改後執行，問題是，編譯一個應用程式需要不算短的時間，少則3-5秒，多則超過一分鐘。有時，只修改了一小段程式碼，執行時卻要花費同樣長的等待時間。Instant Run以軟體解決了這個麻煩，自動判斷修改了那一類的資料，若不是變更如AndroidManifest.xml這類需要重新包裝的內容，則以即時更新模擬器內部的方式，瞬間就能在模擬器看到修改後的執行結果。
 2. Cloud Test Lab: 雲端測試平台讓應用程式可以在雲端上測試結果，雲端測試平台上已提供數百種的裝置與特性配置，開發人員可依照規範與API設計測試流程與驗證條件，將應用程式與測試案例上傳雲端進行自動佈署、測試、回報，我們只需要等它執行完成後，產生測試報告。
 3. 新版模擬器: 新版與前一版本的模擬器在執行上快上三倍，包括CPU、RAM與輸出入的效能都提昇了不只一個等級，使用者當然可以繼續使用如Genymotion第三方模擬器，但現在，新版模擬器已與第三方相差無幾。除此之外，也加入了新的使用者操作介面，在控制、測試如感應器(sensor)的模擬時更加方便，也可以將APK安裝檔直接拖放到模擬器中快速安裝，亦能夠更改模擬器的視窗大小等。
