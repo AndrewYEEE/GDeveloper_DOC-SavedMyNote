@@ -2638,5 +2638,14 @@ node24:Android Studio 2.x版本常見問題(2016/10/14)
 
 [返回目錄](https://github.com/Chao-wei-chu/GDeveloper_DOC-SavedMyNote/blob/master/My_android_note.md#目錄)
 
+node25:Socketio概觀與Android Socketio範例
+----------------------------------------
+
+node26:cookie與session概觀與Android session實現
+----------------------------------------------
+
+
+
+
 
 
