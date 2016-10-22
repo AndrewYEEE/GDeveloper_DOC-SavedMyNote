@@ -2644,8 +2644,23 @@ node25:Socketio概觀與Android Socketio範例
 node26:cookie與session概觀與Android session實現
 ----------------------------------------------
 
+node27:引入外部library jar(Apache_httpClient)遇到之問題
+-----------------------------------------------------------------------------------
+Execution failed for task ':app:transformResourcesWithMergeJavaResForDebug'.
+> com.android.build.api.transform.TransformException: com.android.builder.packaging.DuplicateFileException: Duplicate files copied in APK META-INF/license.txt
 
-
+packagingOptions {
+    exclude 'META-INF/DEPENDENCIES.txt'
+    exclude 'META-INF/LICENSE.txt'
+    exclude 'META-INF/NOTICE.txt'
+    exclude 'META-INF/NOTICE'
+    exclude 'META-INF/LICENSE'
+    exclude 'META-INF/DEPENDENCIES'
+    exclude 'META-INF/notice.txt'
+    exclude 'META-INF/license.txt'
+    exclude 'META-INF/dependencies.txt'
+    exclude 'META-INF/LGPL2.1'
+}
 
 
 
