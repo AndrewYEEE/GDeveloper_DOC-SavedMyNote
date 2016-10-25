@@ -2662,5 +2662,61 @@ packagingOptions {
     exclude 'META-INF/LGPL2.1'
 }
 
+node28:引入外部套件Vitamio所遇到之問題:
+---------------------------------------
+
+Vitamio无法使用的错误 
+
+Error loading libs
+java.lang.UnsatisfiedLinkError: Library …  libstlport_shared.so not found
+java.lang.UnsatisfiedLinkError: Couldn't load vinit: findLibrary returned null 
+java.lang.UnsatisfiedLinkError: unloadOMX_native
+Native libs libffmpeg.so not exists!
+凡是此类错误，一般只有以下几种情况：
+1、Vitamio只支持ARMv6+以上的CPU，如果报以上错误，说明不支持你的机器。（注意：模拟器要使用4.0以上）
+2、没有调用检测解码包的代码（即没有解压解码包，Vitamio会根据当前CPU的类型自动解压相应平台的库），使用方法参照DEMO：
+
+// ~~~ 检测Vitamio是否解压解码包
+if (!LibsChecker.checkVitamioLibs(this))
+    return;
+3、没有以Library的方式使用Vitamio，漏拷贝了VitamioBundle里面的类库或代码，例如libvinit.so、libarm.so等。
+4、如果您有自己的so，请参考Vitamio的libs文件夹（armeabi、armeabi-v7a、x86）将so拷贝、新建相应的文件夹。
+5、如果您是从旧版本Vitamio升级过来，尤其是早期以集成方式使用的，而现在又以Library方式使用，请删除相关的类和文件（res/raw/libarm.so、libs下面的libvinit.so、io.vov.vitamio下面相应的类文件），最后改一下当前项目的versionCode（Vitamio根据当前项目的版本自动重新解压升级）。最后可以尝试卸载之前的app重新安装。强烈建议下载最新版本，先跑通官网例子，没有问题再自己集成，最后搞不定还可以直接在官网例子上修改。
+6、极少数几款设备，比如华为S8600、三星GT-S5830（CPU是ARMv6+，但是无法使用）
+
+视频无法播放的错误 
+
+avformat_open_input: I/O error
+1、确保视频没有问题。先拿VLC、系统自带的播放器或者PC上的播放器，测试一下链接，确保视频是可以播放的。
+2、确保调用方法没有问题。参考官方的例子，先用官网例子测试一个可以播放的链接，然后再不改动其他的代码情况下仅更改播放地址进行测试。
+3、确保测试环境一致。比如拿能上网的PC测试完后拿无法上网的手机测试，那肯定不行。
+4、前面都确保没有问题后最后使用VPlayer来进行测试，如果VPlayer能够播放，那Vitamio一定能播放，否则只有一种情况：不支持！
+
+java.io.FileNotFoundException: No content provider 
+
+这个不是错误，是正常的处理。现在播放视频是这样做的：先把 URL 当做一个 ContentProvider 来打开，如果打不开，就直接当做 URL 来打开
+
+java.lang.SecurityException:Not allowed to bind to service Intent … VitamioService 
+
+如果手机上安装了VPlayer并且使用了旧版本（3.0以前）的Vitamio，可能会报这个错，可以简单理解为冲突，所以后续VitamioService这个类在3.0以后就没有了，还有相关的MediaScannerService也没有了。
+
+java.lang.NoClassDefFoundError: io.vov.vitamio.R$raw 
+
+Vitamio 3.0默认以Android Library的方式使用，对raw的引用使用的io.vov.vitamio.R，如果不是以这种方式使用比如简单的拷贝合并就报这个错。建议以Android Library方式使用，便于后续升级。如果仍然坚持要拷贝合并，可以通过在本工程新建包名io.vov.vitamio，新建R类来实现：
+
+package io.vov.vitamio;
+
+public class R {
+    public static final class raw {
+        public static final int libarm = com.nmbb.oplayer.R.raw.libarm;
+        public static final int pub = com.nmbb.oplayer.R.raw.pub;
+    }
+}
+
+Fatal signal 11 (SIGSEGV) at 0xb77ea280 (code=1), thread 1243 (ov.vitamio.demo)
+类似Fatal signal崩溃的问题，一般是MediaPlayer的生命周期没有使用正确。比如还没有prepare就去调用isPlaying等其他方法都会导致这个问题，使用系统的MediaPlayer也会抛出IllegalStateException的异常。建议去Android官网看文档：http://developer.android.com/reference/android/media/MediaPlayer.html。尤其是MediaPlayer的状态图。
+
+mVideoView.setZOrderOnTop(true);
+
 
 
