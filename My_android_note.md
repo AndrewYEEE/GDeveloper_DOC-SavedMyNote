@@ -2761,3 +2761,50 @@ node29:Error retrieving parent for item: No resource found that matches the give
 	}
 	And always check that your Android Studoi has the supported API Level. You can check it in your Android SDK, like this:
 ![show](/2XGQZ.jpg)
+這名網友表示這項錯誤的出現是因為你使用了更高版本的套件，以上面的例子為例:
+	file Teste4\app\build\intermediates/exploded-aar\com.android.support\appcompat-v7\24.0.0\res\values-v24\values-v24.xml:
+	Error:(2) Error retrieving parent for ....
+這項錯誤指向SDK24版，而當時我的compileSdkVersion使用的是23，所以不相容，改成24後就可以了，如下:
+
+	android {
+	    compileSdkVersion 24
+	    buildToolsVersion "23.0.2"
+
+	    defaultConfig {
+		applicationId "com.example.user.android_drone_control"
+		minSdkVersion 15
+		targetSdkVersion 23
+		versionCode 1
+		versionName "1.0"
+		multiDexEnabled true
+	    }
+	    buildTypes {
+		release {
+		    minifyEnabled false
+		    proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+		}
+	    }
+	}
+
+	dependencies {
+	    compile fileTree(dir: 'libs', include: ['*.jar'])
+	    testCompile 'junit:junit:4.12'
+	    compile project(path: ':openCVLibrary310')
+	    compile project(':vitamio')
+
+
+
+	    compile 'com.android.support:appcompat-v7:+'
+	    compile 'com.android.support:design:+'
+	    compile 'com.android.support:recyclerview-v7:+'
+	    compile 'jp.wasabeef:recyclerview-animators:1.2.0@aar'
+	    compile 'com.android.support:cardview-v7:+'
+	    compile 'com.google.android.gms:play-services-maps:8.4.0'
+	    compile 'com.google.android.gms:play-services:8.4.0'
+	    compile 'com.github.clans:fab:1.6.4'
+	    compile 'io.github.controlwear:virtualjoystick:0.9.9'
+	    compile 'com.github.nkzawa:socket.io-client:0.5.0'
+	}
+	
+另外這名網友建議以後遇到此問題，先去SDKManager下載最新的SDK包，讓程式在編譯時自動搜尋最新的SDK，可以避免此狀況發生。
