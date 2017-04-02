@@ -2730,34 +2730,34 @@ node29:Error retrieving parent for item: No resource found that matches the give
 	
 此問題我也是找了好久，網路上的解法相當多，但對我而言，有用的解法如這位網友的回答:
 
-Your compile SDK version must match the support library major version. This is the solution to your problem. You can check it easily in your Gradle Scripts in build.gradle file. Fx: if your compileSdkVersion is 23 your compile library must start at 23.
+	Your compile SDK version must match the support library major version. This is the solution to your problem. You can check it easily in your Gradle Scripts in build.gradle file. Fx: if your compileSdkVersion is 23 your compile library must start at 23.
 
-compileSdkVersion 23
-buildToolsVersion "23.0.0"
-defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 23
-        versionCode 340
-        versionName "3.4.0"
-}
-dependencies {
-    compile 'com.android.support:appcompat-v7:23.1.0'
-    compile 'com.android.support:recyclerview-v7:23.0.1'
-}
-	
-Your compile SDK version must match the support library major version. This is the solution to your problem. You can check it easily in your Gradle Scripts in build.gradle file. Fx: if your compileSdkVersion is 23 your compile library must start at 23.
+	compileSdkVersion 23
+	buildToolsVersion "23.0.0"
+	defaultConfig {
+		minSdkVersion 15
+		targetSdkVersion 23
+		versionCode 340
+		versionName "3.4.0"
+	}
+	dependencies {
+	    compile 'com.android.support:appcompat-v7:23.1.0'
+	    compile 'com.android.support:recyclerview-v7:23.0.1'
+	}
 
-  compileSdkVersion 23
-    buildToolsVersion "23.0.0"
-    defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 23
-        versionCode 340
-        versionName "3.4.0"
-    }
-dependencies {
-    compile 'com.android.support:appcompat-v7:23.1.0'
-    compile 'com.android.support:recyclerview-v7:23.0.1'
-}
-And always check that your Android Studoi has the supported API Level. You can check it in your Android SDK, like this:
+	Your compile SDK version must match the support library major version. This is the solution to your problem. You can check it easily in your Gradle Scripts in build.gradle file. Fx: if your compileSdkVersion is 23 your compile library must start at 23.
+
+	  compileSdkVersion 23
+	    buildToolsVersion "23.0.0"
+	    defaultConfig {
+		minSdkVersion 15
+		targetSdkVersion 23
+		versionCode 340
+		versionName "3.4.0"
+	    }
+	dependencies {
+	    compile 'com.android.support:appcompat-v7:23.1.0'
+	    compile 'com.android.support:recyclerview-v7:23.0.1'
+	}
+	And always check that your Android Studoi has the supported API Level. You can check it in your Android SDK, like this:
 ![show](/2XGQZ.jpg)
